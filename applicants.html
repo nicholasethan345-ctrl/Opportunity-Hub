@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicants | Opportunity Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .applicants-shell {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+
+      .applicant-controls {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .applicant-controls input,
+      .applicant-controls select {
+        padding: 0.8rem 0.9rem;
+        border-radius: 0.8rem;
+        border: 1px solid var(--neutral-300);
+        background: var(--surface);
+        color: var(--text);
+        font: inherit;
+      }
+
+      .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 1rem;
+        border-bottom: 1px solid var(--neutral-200);
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--surface-2);
+        font-weight: 700;
+      }
+
+      .status-select {
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.75rem;
+        padding: 0.55rem 0.7rem;
+        background: var(--surface-2);
+        color: var(--text);
+        font: inherit;
+      }
+
+      .empty-state {
+        padding: 2rem;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .auth-box {
+        max-width: 480px;
+        margin: 4rem auto;
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: 1rem;
+        padding: 2rem;
+      }
+
+      .auth-box form {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .auth-box input {
+        width: 100%;
+        padding: 0.9rem;
+        border-radius: 0.8rem;
+        border: 1px solid var(--neutral-300);
+        background: var(--surface-2);
+        color: var(--text);
+        font: inherit;
+      }
+    </style>
+  </head>
+  <body data-theme="light">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark">OH</div>
+        <div>
+          <p class="eyebrow">Employer</p>
+          <h1>Opportunity Hub</h1>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Main navigation">
+        <a href="/">Browse</a>
+        <a href="/employer-dashboard.html">Dashboard</a>
+        <a href="/applicants.html">Applicants</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button id="theme-toggle" class="ghost-btn" type="button" aria-label="Toggle dark mode">🌙 Dark</button>
+      </div>
+    </header>
+
+    <main class="applicants-shell">
+      <div id="auth-view" style="display: none;">
+        <div class="auth-box">
+          <h2>Employer access required</h2>
+          <p style="color: var(--muted); margin-bottom: 1rem;">Sign in to review applicants for your listings.</p>
+          <form id="applicant-login-form">
+            <input id="applicant-email" type="email" placeholder="Employer email" required />
+            <input id="applicant-password" type="password" placeholder="Password" required />
+            <button type="submit" class="primary-btn">Login</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="applicants-view" style="display: none;">
+        <div class="toolbar">
+          <div>
+            <p class="eyebrow">Talent pipeline</p>
+            <h2>Applicant management</h2>
+          </div>
+          <div class="applicant-controls">
+            <input id="search-input" type="search" placeholder="Search by name, email, or job" />
+            <select id="status-filter">
+              <option value="all">All statuses</option>
+              <option value="applied">Applied</option>
+              <option value="reviewed">Reviewed</option>
+              <option value="interviewing">Interviewing</option>
+              <option value="offer">Offer</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Submitted</th>
+                <th>Resume</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="applicants-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Opportunity Hub © 2026</p>
+    </footer>
+
+    <script src="applicants.js"></script>
+  </body>
+</html>

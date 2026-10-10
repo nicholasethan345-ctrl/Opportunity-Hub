@@ -50,6 +50,10 @@ app.get('/employer-dashboard.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'employer-dashboard.html'));
 });
 
+app.get('/applicants.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'applicants.html'));
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
