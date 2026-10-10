@@ -93,8 +93,12 @@ function bindApplicationControls() {
   if (applyButton) {
     applyButton.addEventListener("click", () => {
       const title = document.getElementById("application-modal-title");
+      const typeField = document.getElementById("application-opportunity-type");
       if (title) {
         title.textContent = `Apply for ${job.title}`;
+      }
+      if (typeField) {
+        typeField.value = job.type && job.type.toLowerCase().includes('intern') ? 'internship' : 'job';
       }
       modal.classList.add("active");
       modal.setAttribute("aria-hidden", "false");
@@ -141,9 +145,14 @@ async function handleApplicationSubmit(event) {
 
   const form = event.target;
   const submitButton = form.querySelector('button[type="submit"]');
+  const opportunityType = document.getElementById("application-opportunity-type").value;
+
   const payload = {
     jobId: job.id,
     jobTitle: job.title,
+    opportunityId: job.id,
+    opportunityTitle: job.title,
+    opportunityType,
     company: job.company,
     name: document.getElementById("application-name").value.trim(),
     email: document.getElementById("application-email").value.trim(),
@@ -172,7 +181,7 @@ async function handleApplicationSubmit(event) {
     }
 
     closeApplicationModal();
-    showApplicationToast("Application submitted successfully!");
+    window.location.href = "application-success.html";
   } catch (error) {
     showApplicationToast(error.message || "Unable to submit application.", true);
   } finally {
@@ -215,7 +224,9 @@ function loadTheme() {
   const storedTheme = localStorage.getItem("opportunity-hub-theme") || "light";
   document.body.dataset.theme = storedTheme;
   const themeToggle = document.getElementById("theme-toggle");
-  themeToggle.textContent = storedTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+  if (themeToggle) {
+    themeToggle.textContent = storedTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+  }
 }
 
 function toggleTheme() {
@@ -224,9 +235,15 @@ function toggleTheme() {
   document.body.dataset.theme = nextTheme;
   localStorage.setItem("opportunity-hub-theme", nextTheme);
   const themeToggle = document.getElementById("theme-toggle");
-  themeToggle.textContent = nextTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+  if (themeToggle) {
+    themeToggle.textContent = nextTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+  }
 }
 
-document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+const themeToggle = document.getElementById("theme-toggle");
+if (themeToggle) {
+  themeToggle.addEventListener("click", toggleTheme);
+}
+
 loadTheme();
 renderJobDetails();
