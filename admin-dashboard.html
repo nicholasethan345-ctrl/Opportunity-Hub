@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Opportunity Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .admin-shell {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin: 0.5rem 0;
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+
+      .admin-controls {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+      }
+
+      .admin-controls input,
+      .admin-controls select {
+        padding: 0.8rem 0.9rem;
+        border-radius: 0.8rem;
+        border: 1px solid var(--neutral-300);
+        background: var(--surface);
+        color: var(--text);
+        font: inherit;
+      }
+
+      .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 1rem;
+        border-bottom: 1px solid var(--neutral-200);
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--surface-2);
+        font-weight: 700;
+        font-size: 0.875rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .status-applied {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+      }
+
+      .status-reviewed {
+        background: rgba(168, 85, 247, 0.15);
+        color: #a855f7;
+      }
+
+      .status-interviewing {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+      }
+
+      .status-offer {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+      }
+
+      .status-rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+      }
+
+      .opp-type-badge {
+        display: inline-block;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--neutral-200);
+        color: var(--text);
+      }
+
+      .empty-state {
+        padding: 3rem 2rem;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .status-select {
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.75rem;
+        padding: 0.55rem 0.7rem;
+        background: var(--surface-2);
+        color: var(--text);
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .action-buttons button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+      }
+
+      @media (max-width: 768px) {
+        .admin-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        table {
+          font-size: 0.875rem;
+        }
+
+        th, td {
+          padding: 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body data-theme="light">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark">OH</div>
+        <div>
+          <p class="eyebrow">Admin</p>
+          <h1>Opportunity Hub</h1>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Main navigation">
+        <a href="/">Browse</a>
+        <a href="/employer-dashboard.html">Dashboard</a>
+        <a href="/applicants.html">Applicants</a>
+        <a href="/admin-dashboard.html">Admin</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button id="theme-toggle" class="ghost-btn" type="button" aria-label="Toggle dark mode">🌙 Dark</button>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div id="auth-view" style="display: none;">
+        <div class="auth-box" style="max-width: 480px; margin: 4rem auto; background: var(--surface); border: 1px solid var(--neutral-200); border-radius: 1rem; padding: 2rem;">
+          <h2>Admin access required</h2>
+          <p style="color: var(--muted); margin-bottom: 1rem;">Sign in to access the admin dashboard.</p>
+          <form id="admin-login-form" style="display: grid; gap: 1rem;">
+            <input id="admin-email" type="email" placeholder="Admin email" required style="width: 100%; padding: 0.9rem; border-radius: 0.8rem; border: 1px solid var(--neutral-300); background: var(--surface-2); color: var(--text); font: inherit;" />
+            <input id="admin-password" type="password" placeholder="Password" required style="width: 100%; padding: 0.9rem; border-radius: 0.8rem; border: 1px solid var(--neutral-300); background: var(--surface-2); color: var(--text); font: inherit;" />
+            <button type="submit" class="primary-btn">Login</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="admin-view" style="display: none;">
+        <div class="admin-header">
+          <div>
+            <p class="eyebrow">Central management</p>
+            <h2>All applications</h2>
+          </div>
+          <button id="admin-logout" class="secondary-btn">Logout</button>
+        </div>
+
+        <div class="admin-stats">
+          <div class="stat-card">
+            <div class="stat-label">Total applications</div>
+            <div class="stat-number" id="stat-total">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Applied</div>
+            <div class="stat-number" id="stat-applied">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Interviewing</div>
+            <div class="stat-number" id="stat-interviewing">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Offers made</div>
+            <div class="stat-number" id="stat-offer">0</div>
+          </div>
+        </div>
+
+        <div class="admin-controls">
+          <input id="admin-search" type="search" placeholder="Search by name, email, role, or company" />
+          <select id="admin-type-filter">
+            <option value="all">All opportunity types</option>
+            <option value="job">Jobs</option>
+            <option value="internship">Internships</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="scholarship">Scholarships</option>
+            <option value="other">Other</option>
+          </select>
+          <select id="admin-status-filter">
+            <option value="all">All statuses</option>
+            <option value="applied">Applied</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="interviewing">Interviewing</option>
+            <option value="offer">Offer</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Type</th>
+                <th>Role</th>
+                <th>Company</th>
+                <th>Status</th>
+                <th>Submitted</th>
+                <th>Contact</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Opportunity Hub © 2026</p>
+    </footer>
+
+    <script src="admin-dashboard.js"></script>
+  </body>
+</html>
