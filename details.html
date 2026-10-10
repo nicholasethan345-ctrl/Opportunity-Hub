@@ -73,7 +73,8 @@
       }
 
       .application-form-group input,
-      .application-form-group textarea {
+      .application-form-group textarea,
+      .application-form-group select {
         width: 100%;
         border: 1px solid var(--neutral-300);
         border-radius: 0.8rem;
@@ -149,6 +150,17 @@
             <div class="application-form-group">
               <label for="application-phone">Phone</label>
               <input id="application-phone" name="phone" type="tel" placeholder="Optional" />
+            </div>
+
+            <div class="application-form-group full-width">
+              <label for="application-opportunity-type">Opportunity type</label>
+              <select id="application-opportunity-type" name="opportunityType">
+                <option value="job">Job</option>
+                <option value="internship">Internship</option>
+                <option value="volunteer">Volunteer</option>
+                <option value="scholarship">Scholarship</option>
+                <option value="other">Other</option>
+              </select>
             </div>
 
             <div class="application-form-group full-width">
