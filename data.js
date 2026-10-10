@@ -766,5 +766,485 @@ window.opportunityData = [
       "Strong facilitation and program design skills",
       "Ability to build engaging learning experiences"
     ]
+  },
+  {
+    id: 33,
+    title: "Senior Product Analyst",
+    company: "NovaWorks",
+    location: "Remote",
+    type: "Full-time",
+    category: "Product",
+    description: "Use customer and product data to guide roadmap decisions and improve the user journey across our platform.",
+    remote: true,
+    featured: true,
+    postedDays: 2,
+    salary: "$115k - $145k",
+    tags: ["Analytics", "Roadmap", "SQL", "Product"],
+    responsibilities: [
+      "Build dashboards and product reporting for key business metrics",
+      "Analyze customer behavior and identify growth opportunities",
+      "Partner with PMs and design to inform product strategy"
+    ],
+    requirements: [
+      "Experience in product analytics or business analysis",
+      "Strong SQL and dashboarding skills",
+      "Ability to communicate insights clearly to stakeholders"
+    ]
+  },
+  {
+    id: 34,
+    title: "QA Automation Engineer",
+    company: "MatrixOne",
+    location: "Chicago, IL",
+    type: "Full-time",
+    category: "Engineering",
+    description: "Design automated quality systems that keep our release pipeline fast, reliable, and user-friendly.",
+    remote: false,
+    featured: false,
+    postedDays: 5,
+    salary: "$120k - $150k",
+    tags: ["Automation", "QA", "Selenium", "CI/CD"],
+    responsibilities: [
+      "Create and maintain automated regression test suites",
+      "Improve test infrastructure and deployment confidence",
+      "Work closely with engineers to diagnose recurring issues"
+    ],
+    requirements: [
+      "Strong testing and automation experience",
+      "Knowledge of CI/CD pipelines and test frameworks",
+      "Excellent debugging and communication skills"
+    ]
+  },
+  {
+    id: 35,
+    title: "AI Product Manager",
+    company: "Lattice AI",
+    location: "New York, NY",
+    type: "Full-time",
+    category: "Product",
+    description: "Lead AI product strategy and execution for features that improve decision-making and customer productivity.",
+    remote: false,
+    featured: true,
+    postedDays: 6,
+    salary: "$150k - $190k",
+    tags: ["AI", "Strategy", "Product", "Machine Learning"],
+    responsibilities: [
+      "Define and prioritize AI capabilities with strong customer impact",
+      "Partner with design and engineering to ship measurable features",
+      "Translate customer feedback into product and roadmap decisions"
+    ],
+    requirements: [
+      "Experience in AI or SaaS product management",
+      "Strong strategic thinking and cross-functional leadership",
+      "Ability to work with technical teams and manage trade-offs"
+    ]
+  },
+  {
+    id: 36,
+    title: "HR Business Partner",
+    company: "Blue Harbor",
+    location: "Austin, TX",
+    type: "Full-time",
+    category: "HR",
+    description: "Support employee experience, performance, and organizational effectiveness across key business teams.",
+    remote: true,
+    featured: false,
+    postedDays: 3,
+    salary: "$100k - $130k",
+    tags: ["HR", "People", "Culture", "Operations"],
+    responsibilities: [
+      "Partner with leaders on organizational planning and employee experience",
+      "Support performance and talent processes across teams",
+      "Drive HR programs that align with business goals"
+    ],
+    requirements: [
+      "Experience in HR or people operations",
+      "Strong business partnership and communication skills",
+      "Comfort working with leadership and cross-functional teams"
+    ]
+  },
+  {
+    id: 37,
+    title: "Data Engineer",
+    company: "Aurora Cloud",
+    location: "Remote",
+    type: "Full-time",
+    category: "Data",
+    description: "Build the data pipelines and infrastructure that power reporting, analytics, and product intelligence.",
+    remote: true,
+    featured: false,
+    postedDays: 4,
+    salary: "$130k - $170k",
+    tags: ["SQL", "Data Pipelines", "Cloud", "ETL"],
+    responsibilities: [
+      "Design and maintain scalable data ingestion and transformation pipelines",
+      "Improve data quality, monitoring, and documentation",
+      "Collaborate with analytics and product teams on data needs"
+    ],
+    requirements: [
+      "Strong SQL and data pipeline experience",
+      "Comfort with cloud infrastructure and ETL tools",
+      "Ability to work across analytical and engineering contexts"
+    ]
+  },
+  {
+    id: 38,
+    title: "Design Ops Manager",
+    company: "Frame & Form",
+    location: "Seattle, WA",
+    type: "Full-time",
+    category: "Design",
+    description: "Create efficient design systems and workflows that help teams ship better experiences faster.",
+    remote: false,
+    featured: false,
+    postedDays: 7,
+    salary: "$135k - $170k",
+    tags: ["Design Systems", "Operations", "UX", "Leadership"],
+    responsibilities: [
+      "Build and improve design operations across product teams",
+      "Maintain design tooling, process, and governance",
+      "Partner with cross-functional leaders to improve delivery speed"
+    ],
+    requirements: [
+      "Experience in design operations or program management",
+      "Strong understanding of UX workflows and tooling",
+      "Excellent stakeholder communication skills"
+    ]
+  },
+  {
+    id: 39,
+    title: "Partnerships Lead",
+    company: "OpenLane",
+    location: "Remote",
+    type: "Full-time",
+    category: "Sales",
+    description: "Identify and grow strategic partnership opportunities that expand our reach and customer value.",
+    remote: true,
+    featured: true,
+    postedDays: 3,
+    salary: "$125k - $165k",
+    tags: ["Partnerships", "Business Development", "B2B", "Revenue"],
+    responsibilities: [
+      "Source and manage strategic partnerships with key ecosystem players",
+      "Negotiate partnership terms and cross-functional execution plans",
+      "Monitor performance and optimize relationship outcomes"
+    ],
+    requirements: [
+      "Experience in partnerships or business development",
+      "Strong negotiation and relationship-building skills",
+      "Ability to align partnerships with growth goals"
+    ]
+  },
+  {
+    id: 40,
+    title: "Frontend Platform Engineer",
+    company: "Signal Studio",
+    location: "Chicago, IL",
+    type: "Full-time",
+    category: "Engineering",
+    description: "Build shared frontend systems and developer tooling that accelerate product delivery across teams.",
+    remote: true,
+    featured: false,
+    postedDays: 8,
+    salary: "$140k - $180k",
+    tags: ["React", "Platform", "Design Systems", "TypeScript"],
+    responsibilities: [
+      "Create reusable frontend tooling and platform abstractions",
+      "Improve component library quality and engineering standards",
+      "Support teams with architecture reviews and best practices"
+    ],
+    requirements: [
+      "Strong frontend engineering and architecture experience",
+      "Comfort working on internal platform tooling",
+      "Excellent collaboration across product and engineering teams"
+    ]
+  },
+  {
+    id: 41,
+    title: "Customer Research Lead",
+    company: "CivicLoop",
+    location: "Boston, MA",
+    type: "Full-time",
+    category: "Research",
+    description: "Turn customer insights into strategic decisions that improve trust, usability, and product impact.",
+    remote: false,
+    featured: false,
+    postedDays: 9,
+    salary: "$110k - $140k",
+    tags: ["Research", "Interviews", "Insights", "Strategy"],
+    responsibilities: [
+      "Design and run qualitative and quantitative research programs",
+      "Synthesize insights for product and stakeholder teams",
+      "Coach teams to incorporate customer evidence in decision-making"
+    ],
+    requirements: [
+      "Experience leading customer research at scale",
+      "Strong research planning and synthesis skills",
+      "Ability to communicate findings clearly across teams"
+    ]
+  },
+  {
+    id: 42,
+    title: "Accounting Manager",
+    company: "LedgerEdge",
+    location: "Remote",
+    type: "Full-time",
+    category: "Finance",
+    description: "Own core accounting operations and ensure financial reporting supports healthy growth and governance.",
+    remote: true,
+    featured: false,
+    postedDays: 6,
+    salary: "$105k - $135k",
+    tags: ["Accounting", "Finance", "Reporting", "Compliance"],
+    responsibilities: [
+      "Manage month-end close and financial reporting processes",
+      "Maintain controls and oversee reconciliation quality",
+      "Partner with leadership on budgets and forecasting"
+    ],
+    requirements: [
+      "Experience in accounting or finance management",
+      "Strong reporting and compliance knowledge",
+      "Excellent problem-solving and communication skills"
+    ]
+  },
+  {
+    id: 43,
+    title: "Security Engineer",
+    company: "VaultCore",
+    location: "San Jose, CA",
+    type: "Full-time",
+    category: "Security",
+    description: "Protect sensitive systems and workflows with modern security practices and secure-by-default thinking.",
+    remote: false,
+    featured: true,
+    postedDays: 2,
+    salary: "$155k - $205k",
+    tags: ["Security", "Cloud", "Identity", "Infrastructure"],
+    responsibilities: [
+      "Improve security posture across cloud and application layers",
+      "Review platform vulnerabilities and implement remediation",
+      "Partner with engineering on secure architecture decisions"
+    ],
+    requirements: [
+      "Experience in application or cloud security",
+      "Strong knowledge of identity and infrastructure security",
+      "Ability to work with technical teams on security standards"
+    ]
+  },
+  {
+    id: 44,
+    title: "Social Media Manager",
+    company: "TrendForge",
+    location: "Remote",
+    type: "Full-time",
+    category: "Marketing",
+    description: "Drive brand engagement and social growth across channels with thoughtful content and performance analysis.",
+    remote: true,
+    featured: false,
+    postedDays: 5,
+    salary: "$80k - $110k",
+    tags: ["Social", "Brand", "Content", "Growth"],
+    responsibilities: [
+      "Plan and execute social media strategies across channels",
+      "Monitor engagement and optimize content performance",
+      "Collaborate with creative teams on campaign ideas"
+    ],
+    requirements: [
+      "Experience with social media strategy and campaign execution",
+      "Strong copywriting and trend analysis skills",
+      "Comfort with performance metrics and reporting"
+    ]
+  },
+  {
+    id: 45,
+    title: "Application Support Engineer",
+    company: "Harbor Systems",
+    location: "Atlanta, GA",
+    type: "Full-time",
+    category: "Engineering",
+    description: "Support customers and internal teams with application troubleshooting, configuration, and issue resolution.",
+    remote: false,
+    featured: false,
+    postedDays: 4,
+    salary: "$90k - $120k",
+    tags: ["Support", "SaaS", "Troubleshooting", "Customer Success"],
+    responsibilities: [
+      "Respond to application issues and coordinate root cause analysis",
+      "Document customer problems and track resolution workflows",
+      "Partner with engineering on product and service improvements"
+    ],
+    requirements: [
+      "Experience in application support or customer-facing engineering",
+      "Strong technical troubleshooting abilities",
+      "Excellent communication and service mindset"
+    ]
+  },
+  {
+    id: 46,
+    title: "Restaurant Operations Manager",
+    company: "Union Table",
+    location: "Denver, CO",
+    type: "Full-time",
+    category: "Operations",
+    description: "Lead day-to-day restaurant operations and maintain high service standards across staff, food quality, and guest experience.",
+    remote: false,
+    featured: false,
+    postedDays: 1,
+    salary: "$75k - $95k",
+    tags: ["Operations", "Hospitality", "Leadership", "Service"],
+    responsibilities: [
+      "Oversee service standards, staffing, and operational flow",
+      "Drive quality control and guest experience improvements",
+      "Support scheduling, inventory, and team coaching"
+    ],
+    requirements: [
+      "Experience in restaurant or hospitality operations",
+      "Strong team leadership and guest service skills",
+      "Ability to manage busy service environments efficiently"
+    ]
+  },
+  {
+    id: 47,
+    title: "Visual Merchandising Specialist",
+    company: "North Street",
+    location: "New York, NY",
+    type: "Full-time",
+    category: "Retail",
+    description: "Design compelling in-store and digital merchandising experiences that elevate brand storytelling and sales.",
+    remote: false,
+    featured: false,
+    postedDays: 3,
+    salary: "$65k - $85k",
+    tags: ["Merchandising", "Retail", "Brand", "Visual Design"],
+    responsibilities: [
+      "Create merchandising plans and display layouts",
+      "Coordinate brand experiences across stores and campaigns",
+      "Track product presentation performance and optimize results"
+    ],
+    requirements: [
+      "Experience in merchandising or visual retail strategy",
+      "Strong visual eye and layout instincts",
+      "Comfort working with multiple stakeholders and channels"
+    ]
+  },
+  {
+    id: 48,
+    title: "Implementation Consultant",
+    company: "WorkPilot",
+    location: "Remote",
+    type: "Full-time",
+    category: "Customer Success",
+    description: "Guide customers through onboarding and adoption so they see value quickly and sustain long-term success.",
+    remote: true,
+    featured: false,
+    postedDays: 7,
+    salary: "$95k - $125k",
+    tags: ["Consulting", "Implementation", "SaaS", "Onboarding"],
+    responsibilities: [
+      "Lead onboarding and setup projects for new customers",
+      "Translate customer workflows into implementation plans",
+      "Partner with product and support teams to improve rollout quality"
+    ],
+    requirements: [
+      "Experience in consulting, onboarding, or customer implementation",
+      "Strong project management and customer communication skills",
+      "Ability to work with technical and non-technical stakeholders"
+    ]
+  },
+  {
+    id: 49,
+    title: "Environmental Analyst",
+    company: "Greenfield Labs",
+    location: "Portland, OR",
+    type: "Full-time",
+    category: "Operations",
+    description: "Assess environmental performance and support sustainability initiatives across operations and projects.",
+    remote: true,
+    featured: false,
+    postedDays: 6,
+    salary: "$90k - $120k",
+    tags: ["Environment", "Compliance", "Sustainability", "Research"],
+    responsibilities: [
+      "Collect and analyze environmental data and site metrics",
+      "Support sustainability reporting and compliance requirements",
+      "Recommend improvements based on operational and environmental findings"
+    ],
+    requirements: [
+      "Background in environmental science, sustainability, or related field",
+      "Strong analytical and reporting abilities",
+      "Comfort working with cross-functional teams"
+    ]
+  },
+  {
+    id: 50,
+    title: "Machine Learning Ops Engineer",
+    company: "ByteForge",
+    location: "Remote",
+    type: "Full-time",
+    category: "Engineering",
+    description: "Build the systems that keep ML models reliable, observable, and scalable in production environments.",
+    remote: true,
+    featured: true,
+    postedDays: 4,
+    salary: "$160k - $210k",
+    tags: ["MLOps", "AI", "Python", "Cloud"],
+    responsibilities: [
+      "Design machine learning deployment and monitoring pipelines",
+      "Improve reliability, versioning, and performance of ML systems",
+      "Partner with data scientists and engineers on production readiness"
+    ],
+    requirements: [
+      "Experience with MLOps, deployment pipelines, and cloud infrastructure",
+      "Strong Python and production ML systems knowledge",
+      "Ability to balance experimentation speed with operational reliability"
+    ]
+  },
+  {
+    id: 51,
+    title: "Employer Brand Manager",
+    company: "PeopleSpark",
+    location: "Chicago, IL",
+    type: "Full-time",
+    category: "Marketing",
+    description: "Shape how our company is perceived by candidates and build a compelling employer brand that attracts top talent.",
+    remote: true,
+    featured: false,
+    postedDays: 3,
+    salary: "$110k - $140k",
+    tags: ["Brand", "Talent", "Marketing", "Culture"],
+    responsibilities: [
+      "Develop employer brand strategy and cultural storytelling",
+      "Coordinate candidate experience and recruitment marketing campaigns",
+      "Measure brand impact and improve employer perception over time"
+    ],
+    requirements: [
+      "Experience in employer branding, talent marketing, or brand marketing",
+      "Strong storytelling and campaign planning skills",
+      "Ability to connect employer brand with business hiring goals"
+    ]
+  },
+  {
+    id: 52,
+    title: "Prompt Engineer",
+    company: "Inquire AI",
+    location: "Remote",
+    type: "Contract",
+    category: "AI",
+    description: "Design and refine prompts and workflows that improve the quality, reliability, and usefulness of AI-powered products.",
+    remote: true,
+    featured: false,
+    postedDays: 2,
+    salary: "$90k - $130k",
+    tags: ["AI", "Prompting", "LLMs", "UX"],
+    responsibilities: [
+      "Design prompt strategies and evaluation frameworks for AI experiences",
+      "Analyze model outputs and improve quality across product flows",
+      "Collaborate with product and engineering on AI experience improvements"
+    ],
+    requirements: [
+      "Experience working with LLMs or AI product workflows",
+      "Strong writing, experimentation, and evaluation skills",
+      "Ability to improve prompt quality through iteration and testing"
+    ]
   }
 ];
