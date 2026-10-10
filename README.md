@@ -15,11 +15,22 @@ A platform for discovering and sharing opportunities.
 - `index.html` — app structure and layout
 - `styles.css` — styling and responsive design
 - `script.js` — mock data, filtering logic, and interactivity
+- `details.html` and `details.js` — opportunity detail page
+- `data.js` — opportunity dataset
 
-## Run
+## Run locally
 
-Open `index.html` in a browser to use the app.
+```bash
+npm install
+npm start
+```
+
+Then open http://localhost:3000 in your browser.
 
 ## Notes
 
-This is a front-end prototype using mock data and browser localStorage for saved items.
+This is a front-end static website using mock data and browser `localStorage` for saved items. There is no build step required before running it.
+
+## Deployment
+
+Because it is a static site, it can be hosted on GitHub Pages, Netlify, Vercel, or any simple web server.

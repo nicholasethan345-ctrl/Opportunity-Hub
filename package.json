@@ -1,0 +1,10 @@
+{
+  "name": "opportunity-hub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx http-server . -p 3000",
+    "dev": "npx http-server . -p 3000",
+    "build": "echo \"Static site build complete — no compilation step required.\""
+  }
+}
