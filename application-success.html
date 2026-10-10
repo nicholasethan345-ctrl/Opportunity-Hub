@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opportunity Hub</title>
+    <meta name="description" content="Application submitted successfully." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(16, 185, 129, 0.08));
+      }
+
+      .success-shell {
+        width: min(100%, 720px);
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        text-align: center;
+        box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      }
+
+      .success-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+        margin-bottom: 1rem;
+      }
+
+      .success-shell h1 {
+        margin: 0 0 1rem;
+      }
+
+      .success-shell p {
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+
+      .success-actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body data-theme="light">
+    <main class="success-shell">
+      <div class="success-icon">✓</div>
+      <h1>Application submitted</h1>
+      <p>
+        Thanks for applying. The hiring team has received your submission and will be in touch soon.
+      </p>
+      <div class="success-actions">
+        <a class="primary-btn" href="index.html">Browse more opportunities</a>
+        <a class="secondary-btn" href="details.html">View another role</a>
+      </div>
+    </main>
+
+    <script>
+      const storedTheme = localStorage.getItem('opportunity-hub-theme') || 'light';
+      document.body.dataset.theme = storedTheme;
+    </script>
+  </body>
+</html>
