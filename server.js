@@ -1,12 +1,14 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { config } = require('dotenv');
+
+config();
+
 const listingsRouter = require('./routes/listings');
 const authRouter = require('./routes/auth');
 const applicationsRouter = require('./routes/applications');
 const { errorHandler } = require('./middleware/errorHandler');
-
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

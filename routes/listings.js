@@ -2,80 +2,75 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
-const auth = require('./auth');
 const { supabase } = require('../lib/supabase');
 
-const listingsFile = path.join(__dirname, '../data/listings.json');
+const employersFile = path.join(__dirname, '../data/employers.json');
 
-function normalizeListing(record) {
+function normalizeEmployer(record) {
   if (!record) return null;
 
   return {
     id: record.id,
-    employerId: record.employer_id ?? record.employerId,
-    company: record.company,
-    title: record.title,
-    location: record.location,
-    type: record.type,
-    category: record.category,
-    salary: record.salary || 'Competitive',
-    description: record.description,
-    requirements: Array.isArray(record.requirements)
-      ? record.requirements
-      : typeof record.requirements === 'string'
-        ? JSON.parse(record.requirements)
-        : [],
-    tags: Array.isArray(record.tags) ? record.tags : [],
-    remote: Boolean(record.remote ?? false),
-    featured: Boolean(record.featured ?? false),
-    status: record.status || 'draft',
-    postedDays: record.posted_days ?? record.postedDays ?? 0,
+    companyName: record.company_name ?? record.companyName ?? 'Unknown Company',
+    email: record.email,
+    password: record.password,
     createdAt: record.created_at ?? record.createdAt ?? new Date().toISOString(),
-    updatedAt: record.updated_at ?? record.updatedAt ?? new Date().toISOString(),
-    responsibilities: Array.isArray(record.responsibilities)
-      ? record.responsibilities
-      : typeof record.responsibilities === 'string'
-        ? JSON.parse(record.responsibilities)
-        : [],
   };
 }
 
-// Load listings from file
-function loadListings() {
-  if (!fs.existsSync(listingsFile)) {
+function loadEmployers() {
+  if (!fs.existsSync(employersFile)) {
     return [];
   }
 
-  const data = fs.readFileSync(listingsFile, 'utf8');
+  const data = fs.readFileSync(employersFile, 'utf8');
   return JSON.parse(data);
 }
 
-// Save listings to file
-function saveListings(listings) {
-  fs.writeFileSync(listingsFile, JSON.stringify(listings, null, 2));
+function saveEmployers(employers) {
+  fs.writeFileSync(employersFile, JSON.stringify(employers, null, 2));
 }
 
-async function getListingsFromStore() {
+async function getEmployersFromStore() {
   if (!supabase) {
-    return loadListings();
+    return loadEmployers();
   }
 
-  const { data, error } = await supabase.from('listings').select('*').order('created_at', { ascending: false });
+  const { data, error } = await supabase.from('employers').select('*');
   if (error) {
     throw error;
   }
 
-  return (data || []).map(normalizeListing);
+  return (data || []).map(normalizeEmployer);
 }
 
-async function getListingById(id) {
+async function getEmployerByEmail(email) {
   if (!supabase) {
-    const listings = loadListings();
-    return listings.find((listing) => listing.id === id) || null;
+    return loadEmployers().find((employer) => employer.email === email) || null;
   }
 
   const { data, error } = await supabase
-    .from('listings')
+    .from('employers')
+    .select('*')
+    .eq('email', email)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return normalizeEmployer(data);
+}
+
+async function getEmployerById(id) {
+  if (!supabase) {
+    const employers = loadEmployers();
+    return employers.find((employer) => employer.id === id) || null;
+  }
+
+  const { data, error } = await supabase
+    .from('employers')
     .select('*')
     .eq('id', id)
     .limit(1)
@@ -85,39 +80,26 @@ async function getListingById(id) {
     throw error;
   }
 
-  return normalizeListing(data);
+  return normalizeEmployer(data);
 }
 
-async function createListingRecord(payload) {
+async function createEmployerRecord(employer) {
   if (!supabase) {
-    const listings = loadListings();
-    listings.push(payload);
-    saveListings(listings);
-    return payload;
+    const employers = loadEmployers();
+    employers.push(employer);
+    saveEmployers(employers);
+    return employer;
   }
 
   const { data, error } = await supabase
-    .from('listings')
+    .from('employers')
     .insert([
       {
-        id: payload.id,
-        employer_id: payload.employerId,
-        company: payload.company,
-        title: payload.title,
-        location: payload.location,
-        type: payload.type,
-        category: payload.category,
-        salary: payload.salary,
-        description: payload.description,
-        requirements: payload.requirements,
-        tags: payload.tags,
-        remote: payload.remote,
-        featured: payload.featured,
-        status: payload.status,
-        posted_days: payload.postedDays,
-        created_at: payload.createdAt,
-        updated_at: payload.updatedAt,
-        responsibilities: payload.responsibilities,
+        id: employer.id,
+        company_name: employer.companyName,
+        email: employer.email,
+        password: employer.password,
+        created_at: employer.createdAt,
       },
     ])
     .select()
@@ -127,291 +109,145 @@ async function createListingRecord(payload) {
     throw error;
   }
 
-  return normalizeListing(data);
+  return normalizeEmployer(data);
 }
 
-async function saveListingRecord(listing) {
-  if (!supabase) {
-    const listings = loadListings();
-    const listingIndex = listings.findIndex((item) => item.id === listing.id);
-
-    if (listingIndex !== -1) {
-      listings[listingIndex] = listing;
-    } else {
-      listings.push(listing);
-    }
-
-    saveListings(listings);
-    return listing;
-  }
-
-  const { data, error } = await supabase
-    .from('listings')
-    .upsert([
-      {
-        id: listing.id,
-        employer_id: listing.employerId,
-        company: listing.company,
-        title: listing.title,
-        location: listing.location,
-        type: listing.type,
-        category: listing.category,
-        salary: listing.salary,
-        description: listing.description,
-        requirements: listing.requirements,
-        tags: listing.tags,
-        remote: listing.remote,
-        featured: listing.featured,
-        status: listing.status,
-        posted_days: listing.postedDays,
-        created_at: listing.createdAt,
-        updated_at: listing.updatedAt,
-        responsibilities: listing.responsibilities,
-      },
-    ])
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return normalizeListing(data);
+// Generate simple token (in production, use JWT)
+function generateToken(employerId) {
+  return Buffer.from(`${employerId}:${Date.now()}`).toString('base64');
 }
 
-async function deleteListingRecord(id) {
-  if (!supabase) {
-    const listings = loadListings();
-    const filtered = listings.filter((listing) => listing.id !== id);
-    saveListings(filtered);
-    return true;
+// Decode token
+function decodeToken(token) {
+  try {
+    const decoded = Buffer.from(token, 'base64').toString();
+    const [employerId] = decoded.split(':');
+    return employerId;
+  } catch (e) {
+    return null;
   }
-
-  const { error } = await supabase.from('listings').delete().eq('id', id);
-  if (error) {
-    throw error;
-  }
-
-  return true;
 }
 
-// GET /api/listings - Get all published listings
-router.get('/', async (req, res) => {
-  try {
-    const listings = await getListingsFromStore();
-    const published = listings.filter((listing) => listing.status === 'published');
-    res.json(published);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to load listings' });
-  }
-});
+// POST /api/auth/register - Register new employer
+router.post('/register', async (req, res) => {
+  const { companyName, email, password } = req.body;
 
-// GET /api/listings/draft - Get all draft listings for logged-in employer
-router.get('/drafts/all', auth.verifyToken, async (req, res) => {
-  try {
-    const listings = await getListingsFromStore();
-    const draftListings = listings.filter((listing) => listing.employerId === req.employerId && listing.status === 'draft');
-    res.json(draftListings);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to load draft listings' });
-  }
-});
-
-// GET /api/listings/:id - Get specific listing by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const listing = await getListingById(req.params.id);
-
-    if (!listing) {
-      return res.status(404).json({ error: 'Listing not found' });
-    }
-
-    res.json(listing);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to get listing' });
-  }
-});
-
-// POST /api/listings - Create new listing (requires authentication)
-router.post('/', auth.verifyToken, async (req, res) => {
-  const {
-    title,
-    location,
-    type,
-    category,
-    salary,
-    description,
-    requirements,
-    tags,
-    remote,
-    featured,
-    status = 'draft',
-  } = req.body;
-
-  if (!title || !location || !type || !category || !description) {
+  if (!companyName || !email || !password) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
-    const employerId = req.employerId;
-    const employerRow = await require('./auth');
-    const employersData = loadListings();
-    const employers = await require('./auth');
-    const employersList = fs.existsSync(path.join(__dirname, '../data/employers.json'))
-      ? JSON.parse(fs.readFileSync(path.join(__dirname, '../data/employers.json'), 'utf8'))
-      : [];
-    const employer = employersList.find((entry) => entry.id === employerId);
+    const employers = await getEmployersFromStore();
+    const existing = employers.find((employer) => employer.email === email);
 
-    const newListing = {
+    if (existing) {
+      return res.status(409).json({ error: 'Email already registered' });
+    }
+
+    const employer = {
       id: Date.now().toString(),
-      employerId,
-      company: employer?.companyName || 'Unknown Company',
-      title,
-      location,
-      type,
-      category,
-      salary: salary || 'Competitive',
-      description,
-      requirements: requirements || [],
-      tags: tags || [],
-      remote: remote ?? false,
-      featured: featured ?? false,
-      status,
-      postedDays: 0,
+      companyName,
+      email,
+      password,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      responsibilities: [],
     };
 
-    const savedListing = await createListingRecord(newListing);
-    res.status(201).json(savedListing);
+    const savedEmployer = await createEmployerRecord(employer);
+    const token = generateToken(savedEmployer.id);
+
+    res.status(201).json({
+      success: true,
+      employer: {
+        id: savedEmployer.id,
+        companyName: savedEmployer.companyName,
+        email: savedEmployer.email,
+      },
+      token,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to create listing' });
+    res.status(500).json({ error: error.message || 'Registration failed' });
   }
 });
 
-// PUT /api/listings/:id - Update listing (requires authentication and ownership)
-router.put('/:id', auth.verifyToken, async (req, res) => {
+// POST /api/auth/login - Login employer
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password required' });
+  }
+
   try {
-    const listings = await getListingsFromStore();
-    const listingIndex = listings.findIndex((item) => item.id === req.params.id);
+    const employer = await getEmployerByEmail(email);
 
-    if (listingIndex === -1) {
-      return res.status(404).json({ error: 'Listing not found' });
+    if (!employer || employer.password !== password) {
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const listing = listings[listingIndex];
+    const token = generateToken(employer.id);
 
-    if (listing.employerId !== req.employerId) {
-      return res.status(403).json({ error: 'Unauthorized to update this listing' });
-    }
-
-    const {
-      title,
-      location,
-      type,
-      category,
-      salary,
-      description,
-      requirements,
-      tags,
-      remote,
-      featured,
-      status,
-      responsibilities,
-    } = req.body;
-
-    if (title) listing.title = title;
-    if (location) listing.location = location;
-    if (type) listing.type = type;
-    if (category) listing.category = category;
-    if (salary) listing.salary = salary;
-    if (description) listing.description = description;
-    if (requirements) listing.requirements = requirements;
-    if (tags) listing.tags = tags;
-    if (remote !== undefined) listing.remote = remote;
-    if (featured !== undefined) listing.featured = featured;
-    if (status) listing.status = status;
-    if (responsibilities) listing.responsibilities = responsibilities;
-
-    listing.updatedAt = new Date().toISOString();
-
-    const savedListing = await saveListingRecord(listing);
-    res.json(savedListing);
+    res.json({
+      success: true,
+      employer: {
+        id: employer.id,
+        companyName: employer.companyName,
+        email: employer.email,
+      },
+      token,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to update listing' });
+    res.status(500).json({ error: error.message || 'Login failed' });
   }
 });
 
-// POST /api/listings/:id/publish - Publish a draft listing
-router.post('/:id/publish', auth.verifyToken, async (req, res) => {
+// GET /api/auth/me - Get current employer (requires token)
+router.get('/me', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  const employerId = decodeToken(token);
+  if (!employerId) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+
   try {
-    const listing = await getListingById(req.params.id);
+    const employer = await getEmployerById(employerId);
 
-    if (!listing) {
-      return res.status(404).json({ error: 'Listing not found' });
+    if (!employer) {
+      return res.status(404).json({ error: 'Employer not found' });
     }
 
-    if (listing.employerId !== req.employerId) {
-      return res.status(403).json({ error: 'Unauthorized to publish this listing' });
-    }
-
-    if (listing.status !== 'draft') {
-      return res.status(400).json({ error: 'Only draft listings can be published' });
-    }
-
-    listing.status = 'published';
-    listing.postedDays = 0;
-    listing.updatedAt = new Date().toISOString();
-
-    const savedListing = await saveListingRecord(listing);
-    res.json(savedListing);
+    res.json({
+      id: employer.id,
+      companyName: employer.companyName,
+      email: employer.email,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to publish listing' });
+    res.status(500).json({ error: error.message || 'Failed to get employer' });
   }
 });
 
-// POST /api/listings/:id/unpublish - Unpublish a listing back to draft
-router.post('/:id/unpublish', auth.verifyToken, async (req, res) => {
-  try {
-    const listing = await getListingById(req.params.id);
+// Middleware to verify token
+function verifyToken(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1];
 
-    if (!listing) {
-      return res.status(404).json({ error: 'Listing not found' });
-    }
-
-    if (listing.employerId !== req.employerId) {
-      return res.status(403).json({ error: 'Unauthorized to unpublish this listing' });
-    }
-
-    listing.status = 'draft';
-    listing.updatedAt = new Date().toISOString();
-
-    const savedListing = await saveListingRecord(listing);
-    res.json(savedListing);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to unpublish listing' });
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
   }
-});
 
-// DELETE /api/listings/:id - Delete listing (requires authentication and ownership)
-router.delete('/:id', auth.verifyToken, async (req, res) => {
-  try {
-    const listing = await getListingById(req.params.id);
-
-    if (!listing) {
-      return res.status(404).json({ error: 'Listing not found' });
-    }
-
-    if (listing.employerId !== req.employerId) {
-      return res.status(403).json({ error: 'Unauthorized to delete this listing' });
-    }
-
-    await deleteListingRecord(req.params.id);
-    res.json({ success: true, message: 'Listing deleted' });
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Failed to delete listing' });
+  const employerId = decodeToken(token);
+  if (!employerId) {
+    return res.status(401).json({ error: 'Invalid token' });
   }
-});
+
+  req.employerId = employerId;
+  next();
+}
+
+router.verifyToken = verifyToken;
+router.getEmployerById = getEmployerById;
 
 module.exports = router;
