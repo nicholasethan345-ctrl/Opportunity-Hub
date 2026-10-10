@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opportunity Hub</title>
+    <meta
+      name="description"
+      content="Opportunity Hub helps job seekers discover internships, jobs, and growth opportunities."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">OH</div>
+          <div>
+            <p class="eyebrow">Discover</p>
+            <h1>Opportunity Hub</h1>
+          </div>
+        </div>
+        <nav class="topnav" aria-label="Main navigation">
+          <a href="#discover">Discover</a>
+          <a href="#insights">Insights</a>
+          <a href="#resources">Resources</a>
+        </nav>
+        <button class="primary-btn">Get Started</button>
+      </header>
+
+      <main>
+        <section class="hero" id="discover">
+          <div class="hero-copy">
+            <p class="kicker">Your next opportunity starts here</p>
+            <h2>Find roles, projects, and career paths that fit your ambitions.</h2>
+            <p class="hero-text">
+              Explore curated opportunities from startups, non-profits, and global teams.
+              Search by role, location, or focus area and uncover paths that move your career forward.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-btn">Explore Opportunities</button>
+              <button class="secondary-btn">Join Newsletter</button>
+            </div>
+          </div>
+
+          <div class="hero-panel" aria-label="Opportunity summary panel">
+            <div class="mini-stat">
+              <span class="mini-label">Live openings</span>
+              <strong id="live-openings">0</strong>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">Remote-first</span>
+              <strong id="remote-openings">0</strong>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">Avg. response time</span>
+              <strong>3 days</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="filters" aria-label="Filters">
+          <div class="search-box">
+            <label for="search-input" class="sr-only">Search opportunities</label>
+            <input id="search-input" type="search" placeholder="Search roles, fields, or companies" />
+          </div>
+
+          <div class="filter-grid">
+            <label>
+              <span>Category</span>
+              <select id="category-filter">
+                <option value="All">All</option>
+              </select>
+            </label>
+            <label>
+              <span>Location</span>
+              <select id="location-filter">
+                <option value="All">All</option>
+              </select>
+            </label>
+            <label>
+              <span>Type</span>
+              <select id="type-filter">
+                <option value="All">All</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="insights" id="insights" aria-label="Opportunity insights">
+          <article class="insight-card">
+            <p>Top growing fields</p>
+            <h3>Product, Design, Climate</h3>
+            <span>+28% this month</span>
+          </article>
+          <article class="insight-card">
+            <p>Most active employers</p>
+            <h3>Startups & SaaS</h3>
+            <span>41 hiring teams</span>
+          </article>
+          <article class="insight-card">
+            <p>Career momentum</p>
+            <h3>86% apply within 7 days</h3>
+            <span>Based on current matches</span>
+          </article>
+        </section>
+
+        <section class="results-header">
+          <div>
+            <p class="eyebrow">Fresh matches</p>
+            <h3>Opportunities for you</h3>
+          </div>
+          <span id="results-count">0 openings</span>
+        </section>
+
+        <section id="opportunity-list" class="opportunity-list" aria-live="polite"></section>
+      </main>
+
+      <footer class="footer" id="resources">
+        <p>Opportunity Hub © 2026</p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
