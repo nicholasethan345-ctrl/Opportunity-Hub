@@ -25,6 +25,8 @@ const elements = {
   remoteOpenings: document.getElementById("remote-openings"),
   themeToggle: document.getElementById("theme-toggle"),
   newsletterForm: document.getElementById("newsletter-form"),
+  contactForm: document.getElementById("contact-form"),
+  contactStatus: document.getElementById("contact-status"),
 };
 
 function init() {
@@ -38,22 +40,106 @@ function init() {
 }
 
 function attachEventListeners() {
-  elements.searchInput.addEventListener("input", handleSearch);
-  elements.categoryFilter.addEventListener("change", handleFilterChange);
-  elements.locationFilter.addEventListener("change", handleFilterChange);
-  elements.typeFilter.addEventListener("change", handleFilterChange);
-  elements.salaryFilter.addEventListener("change", handleFilterChange);
-  elements.remoteOnly.addEventListener("change", handleFilterChange);
+  if (elements.searchInput) {
+    elements.searchInput.addEventListener("input", handleSearch);
+  }
 
-  elements.themeToggle.addEventListener("click", toggleTheme);
+  if (elements.categoryFilter) {
+    elements.categoryFilter.addEventListener("change", handleFilterChange);
+  }
 
-  elements.newsletterForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const button = elements.newsletterForm.querySelector("button");
-    button.textContent = "Subscribed";
-    button.disabled = true;
-    showNotification("You’re subscribed to Opportunity Hub updates.", "success");
-  });
+  if (elements.locationFilter) {
+    elements.locationFilter.addEventListener("change", handleFilterChange);
+  }
+
+  if (elements.typeFilter) {
+    elements.typeFilter.addEventListener("change", handleFilterChange);
+  }
+
+  if (elements.salaryFilter) {
+    elements.salaryFilter.addEventListener("change", handleFilterChange);
+  }
+
+  if (elements.remoteOnly) {
+    elements.remoteOnly.addEventListener("change", handleFilterChange);
+  }
+
+  if (elements.themeToggle) {
+    elements.themeToggle.addEventListener("click", toggleTheme);
+  }
+
+  if (elements.newsletterForm) {
+    elements.newsletterForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const button = elements.newsletterForm.querySelector("button");
+      button.textContent = "Subscribed";
+      button.disabled = true;
+      showNotification("You’re subscribed to Opportunity Hub updates.", "success");
+    });
+  }
+
+  if (elements.contactForm) {
+    elements.contactForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const payload = {
+        name: formData.get("name")?.toString().trim(),
+        email: formData.get("email")?.toString().trim(),
+        company: formData.get("company")?.toString().trim(),
+        reason: formData.get("reason")?.toString().trim() || "General enquiry",
+        message: formData.get("message")?.toString().trim(),
+      };
+
+      if (!payload.name || !payload.email || !payload.message) {
+        setContactStatus("Please fill in your name, email, and message.", true);
+        return;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(payload.email)) {
+        setContactStatus("Please enter a valid email address.", true);
+        return;
+      }
+
+      const submitButton = form.querySelector("button[type='submit']");
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+      setContactStatus("");
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Unable to send message.");
+        }
+
+        form.reset();
+        setContactStatus(result.message || "Your message has been sent.", false);
+      } catch (error) {
+        setContactStatus(error.message || "Something went wrong. Please try again.", true);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
+    });
+  }
+}
+
+function setContactStatus(message, isError = false) {
+  if (!elements.contactStatus) return;
+  elements.contactStatus.textContent = message;
+  elements.contactStatus.classList.toggle("error", isError);
 }
 
 function handleSearch(event) {
@@ -84,6 +170,8 @@ function populateFilters() {
 }
 
 function populateSelect(selectElement, options) {
+  if (!selectElement) return;
+
   options.forEach((option) => {
     const opt = document.createElement("option");
     opt.value = option;
@@ -226,6 +314,7 @@ function loadSavedOpportunities() {
 }
 
 function updateStats() {
+  if (!elements.liveOpenings || !elements.remoteOpenings) return;
   elements.liveOpenings.textContent = appState.opportunities.length;
   elements.remoteOpenings.textContent = appState.opportunities.filter((opp) => opp.remote).length;
 }
