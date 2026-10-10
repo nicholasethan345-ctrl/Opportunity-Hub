@@ -145,17 +145,29 @@ async function updateApplicationStatusRecord(applicationId, status) {
   return normalizeApplication(data);
 }
 
+// GET /api/applications - Get applications (filtered based on auth)
 router.get('/', auth.verifyToken, async (req, res) => {
   try {
     const applications = await getApplicationsFromStore();
-    const employerListings = loadListings().filter((listing) => listing.employerId === req.employerId);
-    const employerListingIds = new Set(employerListings.map((listing) => String(listing.id)));
+    const employer = await auth.getEmployerById(req.employerId);
+    
+    // Check if user is admin
+    const isAdmin = employer && (employer.role === 'admin' || employer.isAdmin === true || employer.email === 'admin@opportunityhub.test');
+    
+    if (isAdmin) {
+      // Admin sees all applications
+      res.json(applications);
+    } else {
+      // Employers see only their own listing applications
+      const employerListings = loadListings().filter((listing) => listing.employerId === req.employerId);
+      const employerListingIds = new Set(employerListings.map((listing) => String(listing.id)));
 
-    const employerApplications = applications.filter((application) => {
-      return employerListingIds.has(String(application.jobId || application.opportunityId));
-    });
+      const employerApplications = applications.filter((application) => {
+        return employerListingIds.has(String(application.jobId || application.opportunityId));
+      });
 
-    res.json(employerApplications);
+      res.json(employerApplications);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message || 'Failed to fetch applications' });
   }
@@ -185,6 +197,7 @@ router.get('/opportunity/:opportunityId', async (req, res) => {
   }
 });
 
+// POST /api/applications - Create new application (public, no auth required)
 router.post('/', async (req, res) => {
   const {
     jobId,
@@ -240,6 +253,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PATCH /api/applications/:id/status - Update application status (requires auth)
 router.patch('/:id/status', auth.verifyToken, async (req, res) => {
   const { status } = req.body;
 
@@ -255,11 +269,16 @@ router.patch('/:id/status', auth.verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Application not found' });
     }
 
-    const employerListings = loadListings().filter((listing) => listing.employerId === req.employerId);
-    const listingMatch = employerListings.find((listing) => String(listing.id) === String(application.jobId || application.opportunityId));
+    const employer = await auth.getEmployerById(req.employerId);
+    const isAdmin = employer && (employer.role === 'admin' || employer.isAdmin === true || employer.email === 'admin@opportunityhub.test');
 
-    if (!listingMatch) {
-      return res.status(403).json({ error: 'You are not authorized to update this application.' });
+    if (!isAdmin) {
+      const employerListings = loadListings().filter((listing) => listing.employerId === req.employerId);
+      const listingMatch = employerListings.find((listing) => String(listing.id) === String(application.jobId || application.opportunityId));
+
+      if (!listingMatch) {
+        return res.status(403).json({ error: 'You are not authorized to update this application.' });
+      }
     }
 
     const updatedApplication = await updateApplicationStatusRecord(application.id, status);
