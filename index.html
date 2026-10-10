@@ -15,8 +15,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="data.js"></script>
   </head>
-  <body>
+  <body data-theme="light">
     <div class="page-shell">
       <header class="topbar">
         <div class="brand-wrap">
@@ -26,12 +27,19 @@
             <h1>Opportunity Hub</h1>
           </div>
         </div>
+
         <nav class="topnav" aria-label="Main navigation">
           <a href="#discover">Discover</a>
           <a href="#insights">Insights</a>
           <a href="#resources">Resources</a>
         </nav>
-        <button class="primary-btn">Get Started</button>
+
+        <div class="topbar-actions">
+          <button id="theme-toggle" class="ghost-btn" type="button" aria-label="Toggle dark mode">
+            🌙 Dark
+          </button>
+          <button class="primary-btn" type="button">Get Started</button>
+        </div>
       </header>
 
       <main>
@@ -40,12 +48,12 @@
             <p class="kicker">Your next opportunity starts here</p>
             <h2>Find roles, projects, and career paths that fit your ambitions.</h2>
             <p class="hero-text">
-              Explore curated opportunities from startups, non-profits, and global teams.
-              Search by role, location, or focus area and uncover paths that move your career forward.
+              Discover curated opportunities from startups, nonprofits, and global teams.
+              Search by role, location, or focus area and uncover the path that moves your career forward.
             </p>
             <div class="hero-actions">
-              <button class="primary-btn">Explore Opportunities</button>
-              <button class="secondary-btn">Join Newsletter</button>
+              <button class="primary-btn" type="button">Explore Opportunities</button>
+              <button class="secondary-btn" type="button">Join Newsletter</button>
             </div>
           </div>
 
@@ -66,9 +74,16 @@
         </section>
 
         <section class="filters" aria-label="Filters">
-          <div class="search-box">
-            <label for="search-input" class="sr-only">Search opportunities</label>
-            <input id="search-input" type="search" placeholder="Search roles, fields, or companies" />
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <label for="search-input" class="sr-only">Search opportunities</label>
+              <input id="search-input" type="search" placeholder="Search roles, fields, or companies" />
+            </div>
+
+            <label class="checkbox-wrap">
+              <input id="remote-only" type="checkbox" />
+              <span>Remote only</span>
+            </label>
           </div>
 
           <div class="filter-grid">
@@ -78,16 +93,28 @@
                 <option value="All">All</option>
               </select>
             </label>
+
             <label>
               <span>Location</span>
               <select id="location-filter">
                 <option value="All">All</option>
               </select>
             </label>
+
             <label>
               <span>Type</span>
               <select id="type-filter">
                 <option value="All">All</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Salary range</span>
+              <select id="salary-filter">
+                <option value="All">All</option>
+                <option value="Under $100k">Under $100k</option>
+                <option value="$100k - $150k">$100k - $150k</option>
+                <option value="$150k+">$150k+</option>
               </select>
             </label>
           </div>
@@ -120,9 +147,21 @@
         </section>
 
         <section id="opportunity-list" class="opportunity-list" aria-live="polite"></section>
+
+        <section class="newsletter" id="resources">
+          <div class="newsletter-copy">
+            <p class="eyebrow">Stay ahead</p>
+            <h3>Join the Opportunity Hub newsletter</h3>
+            <p>Get weekly updates on hiring trends, hot roles, and new job drops.</p>
+          </div>
+          <form class="newsletter-form" id="newsletter-form">
+            <input type="email" placeholder="Enter your email" aria-label="Email address" />
+            <button class="primary-btn" type="submit">Subscribe</button>
+          </form>
+        </section>
       </main>
 
-      <footer class="footer" id="resources">
+      <footer class="footer">
         <p>Opportunity Hub © 2026</p>
       </footer>
     </div>

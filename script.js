@@ -1,9 +1,5 @@
-// ==========================================
-// Opportunity Hub - Application Script
-// ==========================================
-
 const appState = {
-  opportunities: [],
+  opportunities: window.opportunityData || [],
   filteredOpportunities: [],
   savedOpportunities: new Set(),
   filters: {
@@ -11,6 +7,8 @@ const appState = {
     category: "All",
     location: "All",
     type: "All",
+    salary: "All",
+    remoteOnly: false,
   },
 };
 
@@ -19,179 +17,24 @@ const elements = {
   categoryFilter: document.getElementById("category-filter"),
   locationFilter: document.getElementById("location-filter"),
   typeFilter: document.getElementById("type-filter"),
+  salaryFilter: document.getElementById("salary-filter"),
+  remoteOnly: document.getElementById("remote-only"),
   opportunityList: document.getElementById("opportunity-list"),
   resultsCount: document.getElementById("results-count"),
   liveOpenings: document.getElementById("live-openings"),
   remoteOpenings: document.getElementById("remote-openings"),
+  themeToggle: document.getElementById("theme-toggle"),
+  newsletterForm: document.getElementById("newsletter-form"),
 };
 
-const mockOpportunities = [
-  {
-    id: 1,
-    title: "Product Designer",
-    company: "TechStart Inc",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    category: "Design",
-    description: "Join our design team to shape the future of our product platform.",
-    remote: true,
-    featured: true,
-    postedDays: 2,
-    salary: "$120k - $150k",
-  },
-  {
-    id: 2,
-    title: "Frontend Engineer",
-    company: "CloudBase",
-    location: "Remote",
-    type: "Full-time",
-    category: "Engineering",
-    description: "Build scalable web applications with modern JavaScript frameworks.",
-    remote: true,
-    featured: false,
-    postedDays: 5,
-    salary: "$130k - $170k",
-  },
-  {
-    id: 3,
-    title: "Data Science Intern",
-    company: "AI Innovations",
-    location: "New York, NY",
-    type: "Internship",
-    category: "Data",
-    description: "Work with cutting-edge machine learning models in a collaborative environment.",
-    remote: false,
-    featured: false,
-    postedDays: 1,
-    salary: "$25/hr",
-  },
-  {
-    id: 4,
-    title: "Marketing Manager",
-    company: "Growth Labs",
-    location: "Austin, TX",
-    type: "Full-time",
-    category: "Marketing",
-    description: "Lead our go-to-market strategy for new product launches.",
-    remote: true,
-    featured: false,
-    postedDays: 3,
-    salary: "$100k - $130k",
-  },
-  {
-    id: 5,
-    title: "Backend Developer",
-    company: "DataFlow Systems",
-    location: "Seattle, WA",
-    type: "Full-time",
-    category: "Engineering",
-    description: "Design and maintain microservices that power our data pipeline.",
-    remote: true,
-    featured: true,
-    postedDays: 4,
-    salary: "$140k - $180k",
-  },
-  {
-    id: 6,
-    title: "Content Strategist",
-    company: "Creator Hub",
-    location: "Los Angeles, CA",
-    type: "Part-time",
-    category: "Marketing",
-    description: "Develop content strategy and create engaging materials.",
-    remote: true,
-    featured: false,
-    postedDays: 6,
-    salary: "$35/hr",
-  },
-  {
-    id: 7,
-    title: "UX Researcher",
-    company: "DesignCo",
-    location: "Boston, MA",
-    type: "Full-time",
-    category: "Design",
-    description: "Conduct user research to inform product decisions.",
-    remote: false,
-    featured: false,
-    postedDays: 2,
-    salary: "$110k - $140k",
-  },
-  {
-    id: 8,
-    title: "DevOps Engineer",
-    company: "CloudScale",
-    location: "Remote",
-    type: "Full-time",
-    category: "Engineering",
-    description: "Manage infrastructure and deployment pipelines.",
-    remote: true,
-    featured: false,
-    postedDays: 7,
-    salary: "$150k - $190k",
-  },
-  {
-    id: 9,
-    title: "Product Manager",
-    company: "InnovateTech",
-    location: "Chicago, IL",
-    type: "Full-time",
-    category: "Product",
-    description: "Drive product vision and strategy for our flagship platform.",
-    remote: false,
-    featured: true,
-    postedDays: 1,
-    salary: "$130k - $160k",
-  },
-  {
-    id: 10,
-    title: "Graphic Designer",
-    company: "Creative Studio",
-    location: "Remote",
-    type: "Contract",
-    category: "Design",
-    description: "Create visual assets for web and marketing campaigns.",
-    remote: true,
-    featured: false,
-    postedDays: 3,
-    salary: "$50/hr",
-  },
-  {
-    id: 11,
-    title: "AI/ML Engineer",
-    company: "Neural Systems",
-    location: "Palo Alto, CA",
-    type: "Full-time",
-    category: "Engineering",
-    description: "Develop machine learning models for real-world applications.",
-    remote: false,
-    featured: true,
-    postedDays: 5,
-    salary: "$160k - $210k",
-  },
-  {
-    id: 12,
-    title: "Community Manager",
-    company: "Social Connect",
-    location: "Remote",
-    type: "Full-time",
-    category: "Marketing",
-    description: "Build and engage our growing community of users.",
-    remote: true,
-    featured: false,
-    postedDays: 4,
-    salary: "$80k - $110k",
-  },
-];
-
 function init() {
-  appState.opportunities = mockOpportunities;
-  appState.filteredOpportunities = mockOpportunities;
+  appState.filteredOpportunities = [...appState.opportunities];
   loadSavedOpportunities();
+  loadTheme();
   populateFilters();
   renderOpportunities();
-  attachEventListeners();
   updateStats();
+  attachEventListeners();
 }
 
 function attachEventListeners() {
@@ -199,25 +42,41 @@ function attachEventListeners() {
   elements.categoryFilter.addEventListener("change", handleFilterChange);
   elements.locationFilter.addEventListener("change", handleFilterChange);
   elements.typeFilter.addEventListener("change", handleFilterChange);
+  elements.salaryFilter.addEventListener("change", handleFilterChange);
+  elements.remoteOnly.addEventListener("change", handleFilterChange);
+
+  elements.themeToggle.addEventListener("click", toggleTheme);
+
+  elements.newsletterForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const button = elements.newsletterForm.querySelector("button");
+    button.textContent = "Subscribed";
+    button.disabled = true;
+    showNotification("You’re subscribed to Opportunity Hub updates.", "success");
+  });
 }
 
-function handleSearch(e) {
-  appState.filters.search = e.target.value.toLowerCase();
+function handleSearch(event) {
+  appState.filters.search = event.target.value.toLowerCase();
   applyFilters();
 }
 
-function handleFilterChange(e) {
-  const { id, value } = e.target;
+function handleFilterChange(event) {
+  const { id, value, checked } = event.target;
+
   if (id === "category-filter") appState.filters.category = value;
   if (id === "location-filter") appState.filters.location = value;
   if (id === "type-filter") appState.filters.type = value;
+  if (id === "salary-filter") appState.filters.salary = value;
+  if (id === "remote-only") appState.filters.remoteOnly = checked;
+
   applyFilters();
 }
 
 function populateFilters() {
-  const categories = [...new Set(appState.opportunities.map((opp) => opp.category))];
-  const locations = [...new Set(appState.opportunities.map((opp) => opp.location))];
-  const types = [...new Set(appState.opportunities.map((opp) => opp.type))];
+  const categories = [...new Set(appState.opportunities.map((opp) => opp.category))].sort();
+  const locations = [...new Set(appState.opportunities.map((opp) => opp.location))].sort();
+  const types = [...new Set(appState.opportunities.map((opp) => opp.type))].sort();
 
   populateSelect(elements.categoryFilter, categories);
   populateSelect(elements.locationFilter, locations);
@@ -225,7 +84,7 @@ function populateFilters() {
 }
 
 function populateSelect(selectElement, options) {
-  options.sort().forEach((option) => {
+  options.forEach((option) => {
     const opt = document.createElement("option");
     opt.value = option;
     opt.textContent = option;
@@ -234,20 +93,30 @@ function populateSelect(selectElement, options) {
 }
 
 function applyFilters() {
-  const { search, category, location, type } = appState.filters;
+  const { search, category, location, type, salary, remoteOnly } = appState.filters;
 
   appState.filteredOpportunities = appState.opportunities.filter((opp) => {
     const matchesSearch =
-      search === "" ||
+      !search ||
       opp.title.toLowerCase().includes(search) ||
       opp.company.toLowerCase().includes(search) ||
-      opp.description.toLowerCase().includes(search);
+      opp.description.toLowerCase().includes(search) ||
+      opp.tags.some((tag) => tag.toLowerCase().includes(search));
 
     const matchesCategory = category === "All" || opp.category === category;
     const matchesLocation = location === "All" || opp.location === location;
     const matchesType = type === "All" || opp.type === type;
+    const matchesRemote = !remoteOnly || opp.remote;
 
-    return matchesSearch && matchesCategory && matchesLocation && matchesType;
+    const matchesSalary = (() => {
+      if (salary === "All") return true;
+      if (salary === "Under $100k") return parseInt(opp.salary.replace(/[^\d]/g, ""), 10) < 100000;
+      if (salary === "$100k - $150k") return parseInt(opp.salary.split("-")[0].replace(/[^\d]/g, ""), 10) >= 100000;
+      if (salary === "$150k+") return parseInt(opp.salary.replace(/[^\d]/g, ""), 10) >= 150000;
+      return true;
+    })();
+
+    return matchesSearch && matchesCategory && matchesLocation && matchesType && matchesRemote && matchesSalary;
   });
 
   renderOpportunities();
@@ -256,11 +125,11 @@ function applyFilters() {
 function renderOpportunities() {
   const { filteredOpportunities } = appState;
 
-  if (filteredOpportunities.length === 0) {
+  if (!filteredOpportunities.length) {
     elements.opportunityList.innerHTML = `
       <div class="empty-state">
         <h3>No opportunities found</h3>
-        <p>Try adjusting your filters or search terms to find more opportunities.</p>
+        <p>Try broadening your search or clearing some filters.</p>
       </div>
     `;
     elements.resultsCount.textContent = "0 openings";
@@ -279,26 +148,32 @@ function createOpportunityCard(opp) {
   const isSaved = appState.savedOpportunities.has(opp.id);
   const remoteBadge = opp.remote ? '<span class="opp-badge remote">Remote</span>' : "";
   const featuredBadge = opp.featured ? '<span class="opp-badge featured">Featured</span>' : "";
+  const tagHtml = opp.tags.map((tag) => `<span class="opp-tag">${safe(tag)}</span>`).join("");
 
   return `
-    <article class="opportunity-card" data-id="${opp.id}">
+    <article class="opportunity-card">
       <div class="opp-header">
-        ${featuredBadge}
-        ${remoteBadge}
-        <h4 class="opp-title">${escapeHtml(opp.title)}</h4>
-        <p class="opp-company">${escapeHtml(opp.company)}</p>
+        <div class="opp-badges">${featuredBadge}${remoteBadge}</div>
+        <h4 class="opp-title">${safe(opp.title)}</h4>
+        <p class="opp-company">${safe(opp.company)}</p>
       </div>
+
       <div class="opp-meta">
-        <span>📍 ${escapeHtml(opp.location)}</span>
-        <span>💼 ${escapeHtml(opp.type)}</span>
+        <span>📍 ${safe(opp.location)}</span>
+        <span>💼 ${safe(opp.type)}</span>
         <span>⏱️ ${opp.postedDays}d ago</span>
       </div>
-      <div class="opp-description">${escapeHtml(opp.description)}</div>
+
+      <div class="opp-description">
+        <p>${safe(opp.description)}</p>
+        <div class="opp-tags">${tagHtml}</div>
+      </div>
+
       <div class="opp-footer">
-        <span style="font-weight: 600; color: var(--primary-color);">${escapeHtml(opp.salary)}</span>
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <button class="opp-cta" data-id="${opp.id}">Apply Now</button>
-          <button class="opp-save ${isSaved ? "saved" : ""}" data-id="${opp.id}" aria-label="Save opportunity">
+        <span class="opp-salary">${safe(opp.salary)}</span>
+        <div class="opp-actions">
+          <button class="opp-cta" data-id="${opp.id}" type="button">View details</button>
+          <button class="opp-save ${isSaved ? "saved" : ""}" data-id="${opp.id}" aria-label="Save opportunity" type="button">
             ${isSaved ? "❤️" : "🤍"}
           </button>
         </div>
@@ -308,61 +183,46 @@ function createOpportunityCard(opp) {
 }
 
 function attachCardEventListeners() {
-  document.querySelectorAll(".opp-cta").forEach((btn) => {
-    btn.addEventListener("click", handleApply);
+  document.querySelectorAll(".opp-cta").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = Number(button.dataset.id);
+      window.location.href = `details.html?id=${id}`;
+    });
   });
 
-  document.querySelectorAll(".opp-save").forEach((btn) => {
-    btn.addEventListener("click", handleSave);
+  document.querySelectorAll(".opp-save").forEach((button) => {
+    button.addEventListener("click", toggleSavedOpportunity);
   });
 }
 
-function handleApply(e) {
-  const id = Number(e.target.dataset.id);
-  const opportunity = appState.opportunities.find((opp) => opp.id === id);
-  if (opportunity) {
-    showNotification(`Applied to ${opportunity.title}!`, "success");
-  }
-}
+function toggleSavedOpportunity(event) {
+  const id = Number(event.target.dataset.id);
+  const op = appState.opportunities.find((opp) => opp.id === id);
 
-function handleSave(e) {
-  const id = Number(e.target.dataset.id);
-  const opportunity = appState.opportunities.find((opp) => opp.id === id);
-  if (!opportunity) return;
+  if (!op) return;
 
   if (appState.savedOpportunities.has(id)) {
     appState.savedOpportunities.delete(id);
-    e.target.textContent = "🤍";
-    e.target.classList.remove("saved");
-    showNotification(`Removed ${opportunity.title}`, "info");
+    event.target.textContent = "🤍";
+    event.target.classList.remove("saved");
+    showNotification(`Removed ${op.title} from saved jobs.`, "info");
   } else {
     appState.savedOpportunities.add(id);
-    e.target.textContent = "❤️";
-    e.target.classList.add("saved");
-    showNotification(`Saved ${opportunity.title}!`, "success");
+    event.target.textContent = "❤️";
+    event.target.classList.add("saved");
+    showNotification(`Saved ${op.title}!`, "success");
   }
 
   saveSavedOpportunities();
 }
 
-function showNotification(message, type = "info") {
-  const notification = document.createElement("div");
-  notification.style.position = "fixed";
-  notification.style.bottom = "20px";
-  notification.style.right = "20px";
-  notification.style.padding = "16px 24px";
-  notification.style.backgroundColor = type === "success" ? "var(--success-color)" : "var(--primary-color)";
-  notification.style.color = "white";
-  notification.style.borderRadius = "var(--border-radius-md)";
-  notification.style.boxShadow = "var(--shadow-lg)";
-  notification.style.zIndex = "1000";
-  notification.style.fontWeight = "500";
-  notification.textContent = message;
-  document.body.appendChild(notification);
+function saveSavedOpportunities() {
+  localStorage.setItem("savedOpportunities", JSON.stringify([...appState.savedOpportunities]));
+}
 
-  setTimeout(() => {
-    notification.remove();
-  }, 3000);
+function loadSavedOpportunities() {
+  const saved = JSON.parse(localStorage.getItem("savedOpportunities") || "[]");
+  appState.savedOpportunities = new Set(saved);
 }
 
 function updateStats() {
@@ -370,37 +230,43 @@ function updateStats() {
   elements.remoteOpenings.textContent = appState.opportunities.filter((opp) => opp.remote).length;
 }
 
-function saveSavedOpportunities() {
-  localStorage.setItem("savedOpportunities", JSON.stringify(Array.from(appState.savedOpportunities)));
+function toggleTheme() {
+  const docBody = document.body;
+  const currentTheme = docBody.dataset.theme;
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  docBody.dataset.theme = nextTheme;
+  localStorage.setItem("opportunity-hub-theme", nextTheme);
+  elements.themeToggle.textContent = nextTheme === "dark" ? "☀️ Light" : "🌙 Dark";
 }
 
-function loadSavedOpportunities() {
-  const saved = localStorage.getItem("savedOpportunities");
-  if (saved) {
-    appState.savedOpportunities = new Set(JSON.parse(saved));
-  }
+function loadTheme() {
+  const storedTheme = localStorage.getItem("opportunity-hub-theme") || "light";
+  document.body.dataset.theme = storedTheme;
+  elements.themeToggle.textContent = storedTheme === "dark" ? "☀️ Light" : "🌙 Dark";
 }
 
-function escapeHtml(text) {
+function showNotification(message, type = "info") {
+  const notification = document.createElement("div");
+  notification.style.position = "fixed";
+  notification.style.right = "20px";
+  notification.style.bottom = "20px";
+  notification.style.zIndex = "9999";
+  notification.style.background = type === "success" ? "#10b981" : "#2563eb";
+  notification.style.color = "#fff";
+  notification.style.padding = "0.9rem 1.25rem";
+  notification.style.borderRadius = "12px";
+  notification.style.boxShadow = "0 20px 45px rgba(15, 23, 42, 0.16)";
+  notification.style.fontWeight = "600";
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => notification.remove(), 2500);
+}
+
+function safe(value) {
   const div = document.createElement("div");
-  div.textContent = text;
+  div.textContent = value;
   return div.innerHTML;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  init();
-
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const target = document.querySelector(link.getAttribute("href"));
-      if (target) {
-        event.preventDefault();
-        target.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-  });
-});
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = { appState, mockOpportunities };
-}
+document.addEventListener("DOMContentLoaded", init);
