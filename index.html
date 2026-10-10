@@ -1,171 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Opportunity Hub</title>
-    <meta
-      name="description"
-      content="Opportunity Hub helps job seekers discover internships, jobs, and growth opportunities."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="data.js"></script>
-  </head>
-  <body data-theme="light">
-    <div class="page-shell">
-      <header class="topbar">
-        <div class="brand-wrap">
-          <div class="brand-mark">OH</div>
-          <div>
-            <p class="eyebrow">Discover</p>
-            <h1>Opportunity Hub</h1>
-          </div>
-        </div>
+<section class="contact-section" id="contact">
+  <div class="contact-header">
+    <p class="eyebrow">Get in touch</p>
+    <h3>Contact Opportunity Hub</h3>
+    <p>Have a question, want to partner with us, or need support finding the right role? Send us a message.</p>
+  </div>
 
-        <nav class="topnav" aria-label="Main navigation">
-          <a href="#discover">Discover</a>
-          <a href="#insights">Insights</a>
-          <a href="#resources">Resources</a>
-        </nav>
-
-        <div class="topbar-actions">
-          <button id="theme-toggle" class="ghost-btn" type="button" aria-label="Toggle dark mode">
-            🌙 Dark
-          </button>
-          <button class="primary-btn" type="button">Get Started</button>
-        </div>
-      </header>
-
-      <main>
-        <section class="hero" id="discover">
-          <div class="hero-copy">
-            <p class="kicker">Your next opportunity starts here</p>
-            <h2>Find roles, projects, and career paths that fit your ambitions.</h2>
-            <p class="hero-text">
-              Discover curated opportunities from startups, nonprofits, and global teams.
-              Search by role, location, or focus area and uncover the path that moves your career forward.
-            </p>
-            <div class="hero-actions">
-              <button class="primary-btn" type="button">Explore Opportunities</button>
-              <button class="secondary-btn" type="button">Join Newsletter</button>
-            </div>
-          </div>
-
-          <div class="hero-panel" aria-label="Opportunity summary panel">
-            <div class="mini-stat">
-              <span class="mini-label">Live openings</span>
-              <strong id="live-openings">0</strong>
-            </div>
-            <div class="mini-stat">
-              <span class="mini-label">Remote-first</span>
-              <strong id="remote-openings">0</strong>
-            </div>
-            <div class="mini-stat">
-              <span class="mini-label">Avg. response time</span>
-              <strong>3 days</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="filters" aria-label="Filters">
-          <div class="filter-toolbar">
-            <div class="search-box">
-              <label for="search-input" class="sr-only">Search opportunities</label>
-              <input id="search-input" type="search" placeholder="Search roles, fields, or companies" />
-            </div>
-
-            <label class="checkbox-wrap">
-              <input id="remote-only" type="checkbox" />
-              <span>Remote only</span>
-            </label>
-          </div>
-
-          <div class="filter-grid">
-            <label>
-              <span>Category</span>
-              <select id="category-filter">
-                <option value="All">All</option>
-              </select>
-            </label>
-
-            <label>
-              <span>Location</span>
-              <select id="location-filter">
-                <option value="All">All</option>
-              </select>
-            </label>
-
-            <label>
-              <span>Type</span>
-              <select id="type-filter">
-                <option value="All">All</option>
-              </select>
-            </label>
-
-            <label>
-              <span>Salary range</span>
-              <select id="salary-filter">
-                <option value="All">All</option>
-                <option value="Under $100k">Under $100k</option>
-                <option value="$100k - $150k">$100k - $150k</option>
-                <option value="$150k+">$150k+</option>
-              </select>
-            </label>
-          </div>
-        </section>
-
-        <section class="insights" id="insights" aria-label="Opportunity insights">
-          <article class="insight-card">
-            <p>Top growing fields</p>
-            <h3>Product, Design, Climate</h3>
-            <span>+28% this month</span>
-          </article>
-          <article class="insight-card">
-            <p>Most active employers</p>
-            <h3>Startups & SaaS</h3>
-            <span>41 hiring teams</span>
-          </article>
-          <article class="insight-card">
-            <p>Career momentum</p>
-            <h3>86% apply within 7 days</h3>
-            <span>Based on current matches</span>
-          </article>
-        </section>
-
-        <section class="results-header">
-          <div>
-            <p class="eyebrow">Fresh matches</p>
-            <h3>Opportunities for you</h3>
-          </div>
-          <span id="results-count">0 openings</span>
-        </section>
-
-        <section id="opportunity-list" class="opportunity-list" aria-live="polite"></section>
-
-        <section class="newsletter" id="resources">
-          <div class="newsletter-copy">
-            <p class="eyebrow">Stay ahead</p>
-            <h3>Join the Opportunity Hub newsletter</h3>
-            <p>Get weekly updates on hiring trends, hot roles, and new job drops.</p>
-          </div>
-          <form class="newsletter-form" id="newsletter-form">
-            <input type="email" placeholder="Enter your email" aria-label="Email address" />
-            <button class="primary-btn" type="submit">Subscribe</button>
-          </form>
-        </section>
-      </main>
-
-      <footer class="footer">
-        <p>Opportunity Hub © 2026</p>
-      </footer>
+  <div class="contact-layout">
+    <div class="contact-card info-panel">
+      <h4>We’d love to hear from you</h4>
+      <ul>
+        <li><strong>Email:</strong> opportunityhub15team@gmail.com</li>
+        <li><strong>Response time:</strong> Usually within 1–2 business days</li>
+        <li><strong>Topics:</strong> partnerships, support, career guidance, and general enquiries</li>
+      </ul>
     </div>
 
-    <script src="script.js"></script>
-  </body>
-</html>
+    <form class="contact-card contact-form" id="contact-form" novalidate>
+      <div class="form-row">
+        <label>
+          <span>Full name</span>
+          <input type="text" id="contact-name" name="name" placeholder="Your name" required />
+        </label>
+
+        <label>
+          <span>Email address</span>
+          <input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>
+          <span>Company</span>
+          <input type="text" id="contact-company" name="company" placeholder="Your company or organization" />
+        </label>
+
+        <label>
+          <span>Reason</span>
+          <select id="contact-reason" name="reason">
+            <option value="General enquiry">General enquiry</option>
+            <option value="Partnership">Partnership</option>
+            <option value="Support">Support</option>
+            <option value="Job application question">Job application question</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        <span>Message</span>
+        <textarea id="contact-message" name="message" rows="5" placeholder="Tell us how we can help..." required></textarea>
+      </label>
+
+      <button class="primary-btn contact-submit" type="submit">Send message</button>
+      <p class="form-status" id="contact-status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
