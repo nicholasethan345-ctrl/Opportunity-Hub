@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "npx http-server . -p 3000",
-    "dev": "npx http-server . -p 3000",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
     "build": "echo \"Static site build complete — no compilation step required.\""
+  },
+  "dependencies": {
+    "express": "^4.21.2"
   }
 }
