@@ -11,10 +11,16 @@ const listingsFile = path.join(__dirname, '../data/listings.json');
 function normalizeApplication(record) {
   if (!record) return null;
 
+  const jobId = record.job_id ?? record.jobId ?? record.opportunity_id ?? record.opportunityId;
+  const jobTitle = record.job_title ?? record.jobTitle ?? record.opportunity_title ?? record.opportunityTitle ?? 'Role';
+
   return {
     id: record.id,
-    jobId: record.job_id ?? record.jobId,
-    jobTitle: record.job_title ?? record.jobTitle ?? 'Role',
+    jobId: jobId,
+    opportunityId: jobId,
+    jobTitle,
+    opportunityTitle: jobTitle,
+    opportunityType: record.opportunity_type ?? record.opportunityType ?? 'job',
     company: record.company ?? '',
     name: record.applicant_name ?? record.name ?? 'Applicant',
     email: record.email ?? '',
@@ -146,7 +152,7 @@ router.get('/', auth.verifyToken, async (req, res) => {
     const employerListingIds = new Set(employerListings.map((listing) => String(listing.id)));
 
     const employerApplications = applications.filter((application) => {
-      return employerListingIds.has(String(application.jobId));
+      return employerListingIds.has(String(application.jobId || application.opportunityId));
     });
 
     res.json(employerApplications);
@@ -158,10 +164,24 @@ router.get('/', auth.verifyToken, async (req, res) => {
 router.get('/job/:jobId', async (req, res) => {
   try {
     const applications = await getApplicationsFromStore();
-    const filteredApplications = applications.filter((application) => String(application.jobId) === String(req.params.jobId));
+    const filteredApplications = applications.filter((application) => {
+      return String(application.jobId || application.opportunityId) === String(req.params.jobId);
+    });
     res.json(filteredApplications);
   } catch (error) {
     res.status(500).json({ error: error.message || 'Failed to fetch job applications' });
+  }
+});
+
+router.get('/opportunity/:opportunityId', async (req, res) => {
+  try {
+    const applications = await getApplicationsFromStore();
+    const filteredApplications = applications.filter((application) => {
+      return String(application.opportunityId || application.jobId) === String(req.params.opportunityId);
+    });
+    res.json(filteredApplications);
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Failed to fetch opportunity applications' });
   }
 });
 
@@ -169,6 +189,9 @@ router.post('/', async (req, res) => {
   const {
     jobId,
     jobTitle,
+    opportunityId,
+    opportunityTitle,
+    opportunityType,
     company,
     name,
     email,
@@ -178,8 +201,11 @@ router.post('/', async (req, res) => {
     coverLetter,
   } = req.body;
 
-  if (!jobId || !jobTitle || !name || !email) {
-    return res.status(400).json({ error: 'Job id, job title, full name, and email are required.' });
+  const normalizedJobId = opportunityId ?? jobId;
+  const normalizedJobTitle = opportunityTitle ?? jobTitle;
+
+  if (!normalizedJobId || !normalizedJobTitle || !name || !email) {
+    return res.status(400).json({ error: 'Opportunity id, opportunity title, full name, and email are required.' });
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -189,8 +215,11 @@ router.post('/', async (req, res) => {
 
   const application = {
     id: Date.now().toString(),
-    jobId: String(jobId),
-    jobTitle: String(jobTitle),
+    jobId: String(normalizedJobId),
+    opportunityId: String(normalizedJobId),
+    jobTitle: String(normalizedJobTitle),
+    opportunityTitle: String(normalizedJobTitle),
+    opportunityType: opportunityType || 'job',
     company: company || '',
     name: String(name),
     email: String(email),
@@ -227,7 +256,7 @@ router.patch('/:id/status', auth.verifyToken, async (req, res) => {
     }
 
     const employerListings = loadListings().filter((listing) => listing.employerId === req.employerId);
-    const listingMatch = employerListings.find((listing) => String(listing.id) === String(application.jobId));
+    const listingMatch = employerListings.find((listing) => String(listing.id) === String(application.jobId || application.opportunityId));
 
     if (!listingMatch) {
       return res.status(403).json({ error: 'You are not authorized to update this application.' });
