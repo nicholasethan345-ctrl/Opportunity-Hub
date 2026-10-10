@@ -1,24 +1,25 @@
 # Opportunity Hub
 
-A lightweight opportunity discovery app for browsing roles, internships, and career opportunities.
+A platform for discovering and sharing opportunities.
 
 ## Features
-- Search by keyword, company, role, or category
-- Filter by category, location, and opportunity type
-- Responsive dashboard layout for desktop and mobile
-- Example opportunity data for quick browsing
 
-## Run locally
-You can open `index.html` directly in a browser, or serve the project from the command line:
-
-```bash
-cd Opportunity-Hub
-python3 -m http.server 8000
-```
-
-Then visit http://localhost:8000 in your browser.
+- Search and filter opportunities by keyword, category, location, and type
+- Browse curated jobs, internships, and projects
+- Save favorite openings and track them locally
+- Responsive layout designed for desktop and mobile
+- Live metrics for open positions and remote roles
 
 ## Files
-- `index.html` - app structure and layout
-- `styles.css` - styling and responsive design
-- `script.js` - sample opportunity data and filtering logic
+
+- `index.html` — app structure and layout
+- `styles.css` — styling and responsive design
+- `script.js` — mock data, filtering logic, and interactivity
+
+## Run
+
+Open `index.html` in a browser to use the app.
+
+## Notes
+
+This is a front-end prototype using mock data and browser localStorage for saved items.
