@@ -5,6 +5,8 @@ const listingsRouter = require('./routes/listings');
 const authRouter = require('./routes/auth');
 const { errorHandler } = require('./middleware/errorHandler');
 
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -57,6 +59,9 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Opportunity Hub backend running on http://localhost:${PORT}`);
   console.log(`API available at http://localhost:${PORT}/api`);
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    console.warn('Supabase is not configured yet. Add SUPABASE_URL and SUPABASE_ANON_KEY to a .env file to enable database storage.');
+  }
 });
 
 module.exports = app;
