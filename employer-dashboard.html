@@ -1,382 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employer Dashboard - Opportunity Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employer Dashboard - Opportunity Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
 
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--neutral-200);
-      padding-bottom: 1.5rem;
-    }
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--neutral-200);
+        padding-bottom: 1.5rem;
+      }
 
-    .dashboard-header h2 {
-      font-size: 2rem;
-    }
+      .dashboard-header h2 {
+        font-size: 2rem;
+      }
 
-    .dashboard-actions {
-      display: flex;
-      gap: 1rem;
-    }
+      .dashboard-actions {
+        display: flex;
+        gap: 1rem;
+      }
 
-    .listings-grid {
-      display: grid;
-      gap: 1.5rem;
-    }
+      .listings-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
 
-    .listing-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr auto;
-      gap: 1rem;
-      align-items: center;
-      background: var(--surface);
-      border: 1px solid var(--neutral-200);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-    }
+      .listing-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr auto;
+        gap: 1rem;
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+      }
 
-    .listing-info h4 {
-      margin-bottom: 0.25rem;
-    }
+      .listing-info h4 {
+        margin-bottom: 0.25rem;
+      }
 
-    .listing-info p {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
+      .listing-info p {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
 
-    .status-badge {
-      display: inline-block;
-      padding: 0.4rem 0.8rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
+      .status-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
 
-    .status-badge.draft {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--warning-color);
-    }
+      .status-badge.draft {
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--warning-color);
+      }
 
-    .status-badge.published {
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--secondary-color);
-    }
+      .status-badge.published {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--secondary-color);
+      }
 
-    .listing-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
+      .status-badge.applied,
+      .status-badge.reviewed,
+      .status-badge.interviewing,
+      .status-badge.offer,
+      .status-badge.rejected {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary-color);
+      }
 
-    .icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 0.5rem;
-      border: 1px solid var(--neutral-200);
-      background: var(--surface-2);
-      cursor: pointer;
-      font-size: 0.9rem;
-      display: grid;
-      place-items: center;
-      transition: all var(--transition-base);
-    }
+      .status-badge.reviewed {
+        background: rgba(59, 130, 246, 0.12);
+        color: #2563eb;
+      }
 
-    .icon-btn:hover {
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
+      .status-badge.interviewing {
+        background: rgba(168, 85, 247, 0.12);
+        color: #7c3aed;
+      }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      background: var(--surface);
-      border: 1px dashed var(--neutral-300);
-      border-radius: var(--radius-lg);
-    }
+      .status-badge.offer {
+        background: rgba(16, 185, 129, 0.12);
+        color: #047857;
+      }
 
-    .auth-section {
-      background: var(--surface);
-      border: 1px solid var(--neutral-200);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      max-width: 400px;
-      margin: 2rem auto;
-    }
+      .status-badge.rejected {
+        background: rgba(239, 68, 68, 0.12);
+        color: #b91c1c;
+      }
 
-    .form-group {
-      margin-bottom: 1rem;
-    }
+      .listing-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 0.5rem;
+        border: 1px solid var(--neutral-200);
+        background: var(--surface-2);
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: grid;
+        place-items: center;
+        transition: all var(--transition-base);
+        text-decoration: none;
+        color: inherit;
+      }
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 0.9rem;
-      border: 1px solid var(--neutral-300);
-      border-radius: 0.75rem;
-      background: var(--surface-2);
-      color: var(--text);
-      font-family: inherit;
-    }
+      .icon-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
 
-    .form-group textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: var(--surface);
+        border: 1px dashed var(--neutral-300);
+        border-radius: var(--radius-lg);
+      }
 
-    .form-actions {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-    }
+      .auth-section {
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        max-width: 400px;
+        margin: 2rem auto;
+      }
 
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
+      .form-group {
+        margin-bottom: 1rem;
+      }
 
-    .modal.active {
-      display: flex;
-    }
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+      }
 
-    .modal-content {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      max-width: 600px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.9rem;
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.75rem;
+        background: var(--surface-2);
+        color: var(--text);
+        font-family: inherit;
+      }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--neutral-200);
-      padding-bottom: 1rem;
-    }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
 
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--muted);
-    }
-  </style>
-</head>
-<body data-theme="light">
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="brand-wrap">
-        <div class="brand-mark">OH</div>
-        <div>
-          <p class="eyebrow">Employer</p>
-          <h1>Opportunity Hub</h1>
-        </div>
-      </div>
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
 
-      <nav class="topnav" aria-label="Main navigation">
-        <a href="/">Browse</a>
-        <a href="#dashboard">Dashboard</a>
-      </nav>
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
 
-      <div class="topbar-actions">
-        <button id="theme-toggle" class="ghost-btn" type="button" aria-label="Toggle dark mode">🌙 Dark</button>
-        <button id="logout-btn" class="primary-btn" type="button">Logout</button>
-      </div>
-    </header>
+      .modal.active {
+        display: flex;
+      }
 
-    <main>
-      <!-- Auth Section (shown when not logged in) -->
-      <div id="auth-container">
-        <div class="auth-section">
-          <div id="login-form">
-            <h2>Employer Login</h2>
-            <form id="login-form-element">
-              <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" required />
-              </div>
-              <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" required />
-              </div>
-              <button type="submit" class="primary-btn" style="width: 100%;">Login</button>
-            </form>
-            <p style="margin-top: 1rem; text-align: center;">
-              Don't have an account? <a href="#" id="switch-to-register" style="color: var(--primary-color); font-weight: 600;">Register</a>
-            </p>
-          </div>
+      .modal-content {
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
 
-          <div id="register-form" style="display: none;">
-            <h2>Register as Employer</h2>
-            <form id="register-form-element">
-              <div class="form-group">
-                <label for="register-company">Company Name</label>
-                <input type="text" id="register-company" required />
-              </div>
-              <div class="form-group">
-                <label for="register-email">Email</label>
-                <input type="email" id="register-email" required />
-              </div>
-              <div class="form-group">
-                <label for="register-password">Password</label>
-                <input type="password" id="register-password" required />
-              </div>
-              <button type="submit" class="primary-btn" style="width: 100%;">Register</button>
-            </form>
-            <p style="margin-top: 1rem; text-align: center;">
-              Already have an account? <a href="#" id="switch-to-login" style="color: var(--primary-color); font-weight: 600;">Login</a>
-            </p>
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--neutral-200);
+        padding-bottom: 1rem;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body data-theme="light">
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">OH</div>
+          <div>
+            <p class="eyebrow">Employer</p>
+            <h1>Opportunity Hub</h1>
           </div>
         </div>
-      </div>
 
-      <!-- Dashboard Section (shown when logged in) -->
-      <div id="dashboard-container" style="display: none;">
-        <div class="dashboard-container">
-          <div class="dashboard-header">
-            <div>
-              <h2>Job Listings</h2>
-              <p style="color: var(--muted); margin-top: 0.5rem;" id="company-name"></p>
+        <nav class="topnav" aria-label="Main navigation">
+          <a href="/">Browse</a>
+          <a href="#dashboard">Dashboard</a>
+        </nav>
+
+        <div class="topbar-actions">
+          <button id="theme-toggle" class="ghost-btn" type="button" aria-label="Toggle dark mode">🌙 Dark</button>
+          <button id="logout-btn" class="primary-btn" type="button">Logout</button>
+        </div>
+      </header>
+
+      <main>
+        <div id="auth-container">
+          <div class="auth-section">
+            <div id="login-form">
+              <h2>Employer Login</h2>
+              <form id="login-form-element">
+                <div class="form-group">
+                  <label for="login-email">Email</label>
+                  <input type="email" id="login-email" required />
+                </div>
+                <div class="form-group">
+                  <label for="login-password">Password</label>
+                  <input type="password" id="login-password" required />
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%;">Login</button>
+              </form>
+              <p style="margin-top: 1rem; text-align: center;">
+                Don't have an account? <a href="#" id="switch-to-register" style="color: var(--primary-color); font-weight: 600;">Register</a>
+              </p>
             </div>
-            <div class="dashboard-actions">
-              <button id="create-listing-btn" class="primary-btn" type="button">+ New Listing</button>
+
+            <div id="register-form" style="display: none;">
+              <h2>Register as Employer</h2>
+              <form id="register-form-element">
+                <div class="form-group">
+                  <label for="register-company">Company Name</label>
+                  <input type="text" id="register-company" required />
+                </div>
+                <div class="form-group">
+                  <label for="register-email">Email</label>
+                  <input type="email" id="register-email" required />
+                </div>
+                <div class="form-group">
+                  <label for="register-password">Password</label>
+                  <input type="password" id="register-password" required />
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%;">Register</button>
+              </form>
+              <p style="margin-top: 1rem; text-align: center;">
+                Already have an account? <a href="#" id="switch-to-login" style="color: var(--primary-color); font-weight: 600;">Login</a>
+              </p>
             </div>
           </div>
-
-          <div id="listings-container" class="listings-grid"></div>
-        </div>
-      </div>
-    </main>
-
-    <footer class="footer">
-      <p>Opportunity Hub © 2026</p>
-    </footer>
-  </div>
-
-  <!-- Create/Edit Listing Modal -->
-  <div id="listing-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modal-title">New Job Listing</h3>
-        <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
-      </div>
-
-      <form id="listing-form">
-        <div class="form-group">
-          <label for="listing-title">Job Title *</label>
-          <input type="text" id="listing-title" required />
         </div>
 
-        <div class="form-group">
-          <label for="listing-location">Location *</label>
-          <input type="text" id="listing-location" placeholder="e.g., San Francisco, CA" required />
-        </div>
+        <div id="dashboard-container" style="display: none;">
+          <div class="dashboard-container">
+            <div class="dashboard-header">
+              <div>
+                <h2>Job Listings</h2>
+                <p style="color: var(--muted); margin-top: 0.5rem;" id="company-name"></p>
+              </div>
+              <div class="dashboard-actions">
+                <button id="create-listing-btn" class="primary-btn" type="button">+ New Listing</button>
+              </div>
+            </div>
 
-        <div class="form-group">
-          <label for="listing-type">Employment Type *</label>
-          <select id="listing-type" required>
-            <option value="">Select type...</option>
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Contract">Contract</option>
-            <option value="Internship">Internship</option>
-          </select>
-        </div>
+            <div id="listings-container" class="listings-grid"></div>
 
-        <div class="form-group">
-          <label for="listing-category">Category *</label>
-          <select id="listing-category" required>
-            <option value="">Select category...</option>
-            <option value="Engineering">Engineering</option>
-            <option value="Design">Design</option>
-            <option value="Product">Product</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Data">Data</option>
-            <option value="Sales">Sales</option>
-          </select>
-        </div>
+            <div class="dashboard-header" style="margin-top: 3rem;">
+              <div>
+                <h2>Applications</h2>
+                <p style="color: var(--muted); margin-top: 0.5rem;">Review candidate submissions</p>
+              </div>
+            </div>
 
-        <div class="form-group">
-          <label for="listing-salary">Salary Range</label>
-          <input type="text" id="listing-salary" placeholder="e.g., $100k - $150k" />
+            <div id="applications-container" class="listings-grid"></div>
+          </div>
         </div>
+      </main>
 
-        <div class="form-group">
-          <label for="listing-description">Job Description *</label>
-          <textarea id="listing-description" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="listing-requirements">Requirements (one per line)</label>
-          <textarea id="listing-requirements" placeholder="Line 1\nLine 2\nLine 3"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="listing-tags">Tags (comma-separated)</label>
-          <input type="text" id="listing-tags" placeholder="React, TypeScript, Remote" />
-        </div>
-
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="listing-remote" />
-            Remote Position
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="listing-featured" />
-            Featured Listing
-          </label>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="primary-btn" name="action" value="draft">Save Draft</button>
-          <button type="submit" class="secondary-btn" name="action" value="publish">Publish Now</button>
-          <button type="button" class="ghost-btn" id="modal-cancel">Cancel</button>
-        </div>
-      </form>
+      <footer class="footer">
+        <p>Opportunity Hub © 2026</p>
+      </footer>
     </div>
-  </div>
 
-  <script src="scripts/employer-dashboard.js"></script>
-</body>
+    <div id="listing-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title">New Job Listing</h3>
+          <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+        </div>
+
+        <form id="listing-form">
+          <div class="form-group">
+            <label for="listing-title">Job Title *</label>
+            <input type="text" id="listing-title" required />
+          </div>
+
+          <div class="form-group">
+            <label for="listing-location">Location *</label>
+            <input type="text" id="listing-location" placeholder="e.g., San Francisco, CA" required />
+          </div>
+
+          <div class="form-group">
+            <label for="listing-type">Employment Type *</label>
+            <select id="listing-type" required>
+              <option value="">Select type...</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="listing-category">Category *</label>
+            <select id="listing-category" required>
+              <option value="">Select category...</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Design</option>
+              <option value="Product">Product</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Data">Data</option>
+              <option value="Sales">Sales</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="listing-salary">Salary Range</label>
+            <input type="text" id="listing-salary" placeholder="e.g., $100k - $150k" />
+          </div>
+
+          <div class="form-group">
+            <label for="listing-description">Job Description *</label>
+            <textarea id="listing-description" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="listing-requirements">Requirements (one per line)</label>
+            <textarea id="listing-requirements" placeholder="Line 1\nLine 2\nLine 3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="listing-tags">Tags (comma-separated)</label>
+            <input type="text" id="listing-tags" placeholder="React, TypeScript, Remote" />
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="listing-remote" />
+              Remote Position
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="listing-featured" />
+              Featured Listing
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="primary-btn" name="action" value="draft">Save Draft</button>
+            <button type="submit" class="secondary-btn" name="action" value="publish">Publish Now</button>
+            <button type="button" class="ghost-btn" id="modal-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="scripts/employer-dashboard.js"></script>
+  </body>
 </html>

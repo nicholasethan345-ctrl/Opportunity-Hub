@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const listingsRouter = require('./routes/listings');
 const authRouter = require('./routes/auth');
+const applicationsRouter = require('./routes/applications');
 const { errorHandler } = require('./middleware/errorHandler');
 
 require('dotenv').config();
@@ -17,7 +18,7 @@ app.use(express.static(path.join(__dirname)));
 // CORS headers for API requests
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
@@ -34,6 +35,7 @@ if (!fs.existsSync(dataDir)) {
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/listings', listingsRouter);
+app.use('/api/applications', applicationsRouter);
 
 // Serve static files
 app.get('/', (req, res) => {

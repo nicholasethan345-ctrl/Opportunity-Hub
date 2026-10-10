@@ -73,12 +73,136 @@ function renderJobDetails() {
         </div>
 
         <div class="detail-button-row">
-          <button class="primary-btn" type="button">Apply now</button>
+          <button id="apply-now-button" class="primary-btn" type="button">Apply now</button>
           <button class="secondary-btn" type="button">Save role</button>
         </div>
       </aside>
     </div>
   `;
+
+  bindApplicationControls();
+}
+
+function bindApplicationControls() {
+  const applyButton = document.getElementById("apply-now-button");
+  const modal = document.getElementById("application-modal");
+  const closeButton = document.getElementById("application-modal-close");
+  const cancelButton = document.getElementById("application-cancel");
+  const form = document.getElementById("application-form");
+
+  if (applyButton) {
+    applyButton.addEventListener("click", () => {
+      const title = document.getElementById("application-modal-title");
+      if (title) {
+        title.textContent = `Apply for ${job.title}`;
+      }
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+    });
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener("click", closeApplicationModal);
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener("click", closeApplicationModal);
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        closeApplicationModal();
+      }
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", handleApplicationSubmit);
+  }
+}
+
+function closeApplicationModal() {
+  const modal = document.getElementById("application-modal");
+  const form = document.getElementById("application-form");
+
+  if (modal) {
+    modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  if (form) {
+    form.reset();
+  }
+}
+
+async function handleApplicationSubmit(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const payload = {
+    jobId: job.id,
+    jobTitle: job.title,
+    company: job.company,
+    name: document.getElementById("application-name").value.trim(),
+    email: document.getElementById("application-email").value.trim(),
+    phone: document.getElementById("application-phone").value.trim(),
+    resumeUrl: document.getElementById("application-resume").value.trim(),
+    portfolioUrl: document.getElementById("application-portfolio").value.trim(),
+    coverLetter: document.getElementById("application-cover-letter").value.trim(),
+  };
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Submitting...";
+
+  try {
+    const response = await fetch("/api/applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(result.error || "Unable to submit application.");
+    }
+
+    closeApplicationModal();
+    showApplicationToast("Application submitted successfully!");
+  } catch (error) {
+    showApplicationToast(error.message || "Unable to submit application.", true);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Submit application";
+  }
+}
+
+function showApplicationToast(message, isError = false) {
+  const existing = document.getElementById("application-toast");
+  if (existing) {
+    existing.remove();
+  }
+
+  const toast = document.createElement("div");
+  toast.id = "application-toast";
+  toast.textContent = message;
+  toast.style.position = "fixed";
+  toast.style.right = "20px";
+  toast.style.bottom = "20px";
+  toast.style.zIndex = "2000";
+  toast.style.padding = "0.9rem 1.1rem";
+  toast.style.borderRadius = "12px";
+  toast.style.color = "#fff";
+  toast.style.background = isError ? "#ef4444" : "#10b981";
+  toast.style.boxShadow = "0 20px 45px rgba(15, 23, 42, 0.16)";
+  toast.style.fontWeight = "600";
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2600);
 }
 
 function escapeHtml(text) {

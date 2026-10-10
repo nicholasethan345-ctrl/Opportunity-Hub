@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (authState.token) {
     showDashboard();
     fetchListings();
+    fetchApplications();
   } else {
     showAuthForms();
   }
@@ -75,6 +76,7 @@ async function handleLogin(e) {
 
     showDashboard();
     fetchListings();
+    fetchApplications();
     showNotification('Login successful!', 'success');
   } catch (err) {
     showNotification('Login failed: ' + err.message, 'error');
@@ -105,6 +107,7 @@ async function handleRegister(e) {
 
     showDashboard();
     fetchListings();
+    fetchApplications();
     showNotification('Registration successful!', 'success');
   } catch (err) {
     showNotification('Registration failed: ' + err.message, 'error');
@@ -133,6 +136,21 @@ async function fetchListings() {
     renderListings(listings);
   } catch (err) {
     showNotification('Error loading listings: ' + err.message, 'error');
+  }
+}
+
+async function fetchApplications() {
+  try {
+    const response = await fetch(`${API_BASE}/applications`, {
+      headers: { 'Authorization': `Bearer ${authState.token}` }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch applications');
+
+    const applications = await response.json();
+    renderApplications(applications);
+  } catch (err) {
+    showNotification('Error loading applications: ' + err.message, 'error');
   }
 }
 
@@ -173,6 +191,42 @@ function renderListings(listings) {
   `).join('');
 }
 
+function renderApplications(applications) {
+  const container = document.getElementById('applications-container');
+
+  if (applications.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <h3>No applications yet</h3>
+        <p>New submissions will appear here once candidates apply.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = applications.map((application) => `
+    <div class="listing-row">
+      <div class="listing-info">
+        <h4>${escapeHtml(application.name)}</h4>
+        <p>${escapeHtml(application.jobTitle)} • ${escapeHtml(application.email)}</p>
+      </div>
+      <div>
+        <span class="status-badge ${application.status || 'applied'}">${application.status || 'applied'}</span>
+      </div>
+      <div>
+        <p>${escapeHtml(application.company || '—')}</p>
+      </div>
+      <div>
+        <p>${new Date(application.createdAt).toLocaleDateString()}</p>
+      </div>
+      <div class="listing-actions">
+        ${application.resumeUrl ? `<a class="icon-btn" title="Resume" href="${application.resumeUrl}" target="_blank" rel="noreferrer">📄</a>` : '<span class="icon-btn" title="No resume" style="cursor: default; opacity: 0.5;">📄</span>'}
+        <button class="icon-btn" title="Update status" onclick="advanceApplicationStatus('${application.id}', '${application.status || 'applied'}')">⏭️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
 async function editListing(listingId) {
   try {
     const response = await fetch(`${API_BASE}/listings/${listingId}`);
@@ -181,7 +235,6 @@ async function editListing(listingId) {
     const listing = await response.json();
     currentEditingListingId = listingId;
     
-    // Populate form
     document.getElementById('listing-title').value = listing.title;
     document.getElementById('listing-location').value = listing.location;
     document.getElementById('listing-type').value = listing.type;
@@ -217,7 +270,7 @@ async function handleSaveListing(e) {
   };
 
   try {
-    const url = currentEditingListingId 
+    const url = currentEditingListingId
       ? `${API_BASE}/listings/${currentEditingListingId}`
       : `${API_BASE}/listings`;
     
@@ -275,6 +328,33 @@ async function deleteListing(listingId) {
     showNotification('Listing deleted', 'success');
   } catch (err) {
     showNotification('Error deleting listing: ' + err.message, 'error');
+  }
+}
+
+async function advanceApplicationStatus(applicationId, currentStatus) {
+  const sequence = ['applied', 'reviewed', 'interviewing', 'offer', 'rejected'];
+  const currentIndex = sequence.indexOf(currentStatus) === -1 ? 0 : sequence.indexOf(currentStatus);
+  const nextStatus = sequence[(currentIndex + 1) % sequence.length];
+
+  try {
+    const response = await fetch(`${API_BASE}/applications/${applicationId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authState.token}`
+      },
+      body: JSON.stringify({ status: nextStatus })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Failed to update application status');
+    }
+
+    fetchApplications();
+    showNotification(`Application moved to ${nextStatus}`, 'success');
+  } catch (err) {
+    showNotification('Error updating application: ' + err.message, 'error');
   }
 }
 

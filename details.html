@@ -9,6 +9,98 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .application-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1rem;
+      }
+
+      .application-modal.active {
+        display: flex;
+      }
+
+      .application-modal-content {
+        width: min(100%, 620px);
+        background: var(--surface);
+        border: 1px solid var(--neutral-200);
+        border-radius: 1.25rem;
+        box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
+        padding: 1.5rem;
+      }
+
+      .application-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--neutral-200);
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .application-modal-close {
+        border: none;
+        background: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--muted);
+      }
+
+      .application-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .application-form-grid .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .application-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+      }
+
+      .application-form-group label {
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .application-form-group input,
+      .application-form-group textarea {
+        width: 100%;
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.8rem;
+        padding: 0.8rem 0.9rem;
+        background: var(--surface-2);
+        color: var(--text);
+        font-family: inherit;
+      }
+
+      .application-form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .application-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      @media (max-width: 640px) {
+        .application-form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
     <script src="data.js"></script>
   </head>
   <body data-theme="light">
@@ -34,6 +126,54 @@
     <footer class="footer">
       <p>Opportunity Hub © 2026</p>
     </footer>
+
+    <div id="application-modal" class="application-modal" aria-hidden="true">
+      <div class="application-modal-content">
+        <div class="application-modal-header">
+          <h3 id="application-modal-title">Apply for this role</h3>
+          <button type="button" class="application-modal-close" id="application-modal-close" aria-label="Close application form">&times;</button>
+        </div>
+
+        <form id="application-form">
+          <div class="application-form-grid">
+            <div class="application-form-group full-width">
+              <label for="application-name">Full name</label>
+              <input id="application-name" name="name" type="text" required />
+            </div>
+
+            <div class="application-form-group">
+              <label for="application-email">Email</label>
+              <input id="application-email" name="email" type="email" required />
+            </div>
+
+            <div class="application-form-group">
+              <label for="application-phone">Phone</label>
+              <input id="application-phone" name="phone" type="tel" placeholder="Optional" />
+            </div>
+
+            <div class="application-form-group full-width">
+              <label for="application-resume">Resume URL</label>
+              <input id="application-resume" name="resumeUrl" type="url" placeholder="https://..." />
+            </div>
+
+            <div class="application-form-group full-width">
+              <label for="application-portfolio">Portfolio URL</label>
+              <input id="application-portfolio" name="portfolioUrl" type="url" placeholder="Optional" />
+            </div>
+
+            <div class="application-form-group full-width">
+              <label for="application-cover-letter">Cover letter</label>
+              <textarea id="application-cover-letter" name="coverLetter" placeholder="Tell the employer why you're a fit for this role."></textarea>
+            </div>
+          </div>
+
+          <div class="application-form-actions">
+            <button type="button" class="ghost-btn" id="application-cancel">Cancel</button>
+            <button type="submit" class="primary-btn">Submit application</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <script src="details.js"></script>
   </body>
